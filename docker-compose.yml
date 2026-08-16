@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: pharmaguard-api/app:latest
-    container_name: pharmaguard-api-app
+    container_name: pharmaguard-api
     restart: always
     depends_on:
       postgres:

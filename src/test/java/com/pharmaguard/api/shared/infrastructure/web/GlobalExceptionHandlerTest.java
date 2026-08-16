@@ -8,6 +8,7 @@ import jakarta.validation.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.ProblemDetail;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +25,14 @@ import static org.mockito.Mockito.when;
 
 class GlobalExceptionHandlerTest {
 
-    private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
+    private final GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource());
+
+    private static ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("message");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
 
     static class ValidationTarget {
         @SuppressWarnings("unused")
@@ -78,12 +87,15 @@ class GlobalExceptionHandlerTest {
 
         assertThat(problem.getStatus()).isEqualTo(400);
         assertThat(problem.getTitle()).isEqualTo("Bad Request");
-        assertThat(problem.getDetail()).isEqualTo("Requisição inválida. Verifique os campos informados.");
+        assertThat(problem.getDetail()).isEqualTo("Requisicao invalida. Verifique os campos informados.");
         assertThat(problem.getProperties()).containsEntry("path", "/api/test/validation");
 
         @SuppressWarnings("unchecked")
-        List<String> errors = (List<String>) problem.getProperties().get("errors");
-        assertThat(errors).containsExactly("nome: não deve estar em branco");
+        List<Map<String, String>> errors = (List<Map<String, String>>) problem.getProperties().get("errors");
+        assertThat(errors).containsExactly(Map.of(
+            "field", "nome",
+            "code", "não deve estar em branco",
+            "message", "não deve estar em branco"));
     }
 
     @Test
@@ -103,11 +115,14 @@ class GlobalExceptionHandlerTest {
 
         assertThat(problem.getStatus()).isEqualTo(400);
         assertThat(problem.getTitle()).isEqualTo("Bad Request");
-        assertThat(problem.getDetail()).isEqualTo("Requisição inválida. Verifique os parâmetros informados.");
+        assertThat(problem.getDetail()).isEqualTo("Requisicao invalida. Verifique os parametros informados.");
 
         @SuppressWarnings("unchecked")
-        List<String> errors = (List<String>) problem.getProperties().get("errors");
-        assertThat(errors).containsExactly("filtro.dataInicial: deve ser maior que a data final");
+        List<Map<String, String>> errors = (List<Map<String, String>>) problem.getProperties().get("errors");
+        assertThat(errors).containsExactly(Map.of(
+            "field", "filtro.dataInicial",
+            "code", "deve ser maior que a data final",
+            "message", "deve ser maior que a data final"));
     }
 
     @Test
