@@ -1,0 +1,623 @@
+openapi: 3.0.3
+info:
+  title: PharmaGuard API - Modulo Supply - Fornecedores
+  version: "1.0.0"
+  description: Contrato OpenAPI para operacoes CRUD de fornecedores, contatos e lead time
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /api/v1/fornecedores:
+    post:
+      tags:
+        - Fornecedores
+      summary: Criar fornecedor
+      operationId: criarFornecedor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CriarFornecedorRequest"
+      responses:
+        "201":
+          description: Fornecedor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FornecedorResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "409":
+          description: Fornecedor ja cadastrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    get:
+      tags:
+        - Fornecedores
+      summary: Listar fornecedores
+      operationId: listarFornecedores
+      responses:
+        "200":
+          description: Lista de fornecedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FornecedorResponse"
+
+  /api/v1/fornecedores/{id}:
+    get:
+      tags:
+        - Fornecedores
+      summary: Buscar fornecedor por id
+      operationId: buscarFornecedorPorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Fornecedor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FornecedorResponse"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    put:
+      tags:
+        - Fornecedores
+      summary: Atualizar fornecedor
+      operationId: atualizarFornecedor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AtualizarFornecedorRequest"
+      responses:
+        "200":
+          description: Fornecedor atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FornecedorResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: Fornecedor ja cadastrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    delete:
+      tags:
+        - Fornecedores
+      summary: Remover fornecedor
+      operationId: removerFornecedor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Fornecedor removido com sucesso
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/fornecedores/{fornecedorId}/contatos:
+    post:
+      tags:
+        - Contatos
+      summary: Cadastrar contato do fornecedor
+      operationId: cadastrarContatoFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CriarContatoFornecedorRequest"
+      responses:
+        "201":
+          description: Contato cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContatoFornecedorResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: Contato ja cadastrado para o fornecedor
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    get:
+      tags:
+        - Contatos
+      summary: Listar contatos do fornecedor
+      operationId: listarContatosFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Lista de contatos do fornecedor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContatoFornecedorResponse"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/fornecedores/{fornecedorId}/contatos/{contatoId}:
+    get:
+      tags:
+        - Contatos
+      summary: Buscar contato do fornecedor por id
+      operationId: buscarContatoFornecedorPorId
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: contatoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Contato encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContatoFornecedorResponse"
+        "404":
+          description: Fornecedor ou contato nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    put:
+      tags:
+        - Contatos
+      summary: Atualizar contato do fornecedor
+      operationId: atualizarContatoFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: contatoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AtualizarContatoFornecedorRequest"
+      responses:
+        "200":
+          description: Contato atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContatoFornecedorResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Fornecedor ou contato nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: Contato ja cadastrado para o fornecedor
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    delete:
+      tags:
+        - Contatos
+      summary: Remover contato do fornecedor
+      operationId: removerContatoFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: contatoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Contato removido com sucesso
+        "404":
+          description: Fornecedor ou contato nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/fornecedores/{fornecedorId}/lead-time:
+    get:
+      tags:
+        - Lead Time
+      summary: Consultar lead time do fornecedor
+      operationId: consultarLeadTimeFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Lead time do fornecedor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadTimeFornecedorResponse"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    put:
+      tags:
+        - Lead Time
+      summary: Atualizar lead time do fornecedor
+      operationId: atualizarLeadTimeFornecedor
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AtualizarLeadTimeFornecedorRequest"
+      responses:
+        "200":
+          description: Lead time atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadTimeFornecedorResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Fornecedor nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+components:
+  schemas:
+
+    CriarFornecedorRequest:
+      type: object
+      required:
+        - nome
+        - codigo
+        - documento
+      properties:
+        nome:
+          type: string
+          example: Distribuidora Farma Sul
+        codigo:
+          type: string
+          example: FORN-0001
+        documento:
+          type: string
+          example: 12.345.678/0001-90
+        observacao:
+          type: string
+          example: Fornecedor prioritario para reposicao de antibioticos
+
+    AtualizarFornecedorRequest:
+      type: object
+      required:
+        - nome
+        - codigo
+        - documento
+      properties:
+        nome:
+          type: string
+          example: Distribuidora Farma Sul
+        codigo:
+          type: string
+          example: FORN-0001
+        documento:
+          type: string
+          example: 12.345.678/0001-90
+        observacao:
+          type: string
+          example: Fornecedor prioritario para reposicao de antibioticos
+        ativo:
+          type: boolean
+          example: true
+
+    FornecedorResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        codigo:
+          type: string
+        documento:
+          type: string
+        observacao:
+          type: string
+        leadTime:
+          $ref: "#/components/schemas/LeadTimeFornecedorResponse"
+        ativo:
+          type: boolean
+        dataCriacao:
+          type: string
+          format: date-time
+          nullable: true
+        dataUltimaAlteracao:
+          type: string
+          format: date-time
+          nullable: true
+
+    CriarContatoFornecedorRequest:
+      type: object
+      required:
+        - nome
+        - canalPrincipal
+      properties:
+        nome:
+          type: string
+          example: Maria Souza
+        cargo:
+          type: string
+          example: Executiva de contas
+        telefone:
+          type: string
+          example: +55 11 99999-9999
+        email:
+          type: string
+          format: email
+          example: maria.souza@fornecedor.com.br
+        canalPrincipal:
+          type: string
+          enum:
+            - TELEFONE
+            - EMAIL
+            - WHATSAPP
+            - OUTRO
+          example: EMAIL
+
+    AtualizarContatoFornecedorRequest:
+      type: object
+      required:
+        - nome
+        - canalPrincipal
+      properties:
+        nome:
+          type: string
+          example: Maria Souza
+        cargo:
+          type: string
+          example: Executiva de contas
+        telefone:
+          type: string
+          example: +55 11 99999-9999
+        email:
+          type: string
+          format: email
+          example: maria.souza@fornecedor.com.br
+        canalPrincipal:
+          type: string
+          enum:
+            - TELEFONE
+            - EMAIL
+            - WHATSAPP
+            - OUTRO
+          example: EMAIL
+        ativo:
+          type: boolean
+          example: true
+
+    ContatoFornecedorResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        cargo:
+          type: string
+        telefone:
+          type: string
+        email:
+          type: string
+          format: email
+        canalPrincipal:
+          type: string
+        ativo:
+          type: boolean
+        fornecedorId:
+          type: integer
+          format: int64
+        dataCriacao:
+          type: string
+          format: date-time
+          nullable: true
+        dataUltimaAlteracao:
+          type: string
+          format: date-time
+          nullable: true
+
+    AtualizarLeadTimeFornecedorRequest:
+      type: object
+      required:
+        - leadTimeDias
+      properties:
+        leadTimeDias:
+          type: integer
+          minimum: 0
+          example: 7
+
+    LeadTimeFornecedorResponse:
+      type: object
+      properties:
+        leadTimeDias:
+          type: integer
+          example: 7
+        classificacao:
+          type: string
+          enum:
+            - USUAL
+            - ELEVADO
+          example: USUAL
+        dataUltimaAtualizacao:
+          type: string
+          format: date-time
+          nullable: true
+
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    ValidationProblemDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemDetail"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/FieldError"
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string

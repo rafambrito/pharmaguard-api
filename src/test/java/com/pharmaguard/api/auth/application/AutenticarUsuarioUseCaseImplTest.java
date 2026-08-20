@@ -117,6 +117,11 @@ class AutenticarUsuarioUseCaseImplTest {
 
     private static final class PasswordEncoderStub implements AutenticarUsuarioUseCase.PasswordEncoderPort {
         @Override
+        public String encode(CharSequence rawPassword) {
+            return "hash-enc";
+        }
+
+        @Override
         public boolean matches(CharSequence rawPassword, String encodedPassword) {
             return "senha123".equals(rawPassword.toString()) && "hash-enc".equals(encodedPassword);
         }
