@@ -1,5 +1,8 @@
-package com.pharmaguard.api.auth.adapters.out.config;
+package com.pharmaguard.api.auth.infrastructure.config;
 
+import com.pharmaguard.api.auth.adapters.out.audit.Slf4jAuthAuditService;
+import com.pharmaguard.api.auth.adapters.out.repository.InMemoryAuthRepositoryAdapter;
+import com.pharmaguard.api.auth.adapters.out.repository.UsuarioJpaRepository;
 import com.pharmaguard.api.auth.application.AuthAuditService;
 import com.pharmaguard.api.auth.application.AutenticarUsuarioUseCase;
 import com.pharmaguard.api.auth.application.AutenticarUsuarioUseCaseImpl;
@@ -9,9 +12,6 @@ import com.pharmaguard.api.auth.application.RenovarSessaoUseCase;
 import com.pharmaguard.api.auth.application.RenovarSessaoUseCaseImpl;
 import com.pharmaguard.api.auth.application.UsuarioUseCase;
 import com.pharmaguard.api.auth.application.UsuarioUseCaseImpl;
-import com.pharmaguard.api.auth.adapters.out.audit.Slf4jAuthAuditService;
-import com.pharmaguard.api.auth.adapters.out.repository.InMemoryAuthRepositoryAdapter;
-import com.pharmaguard.api.auth.adapters.out.repository.UsuarioJpaRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

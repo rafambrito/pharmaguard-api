@@ -1,5 +1,11 @@
-package com.pharmaguard.api.inventory.adapters.out.config;
+package com.pharmaguard.api.inventory.infrastructure.config;
 
+import com.pharmaguard.api.inventory.adapters.out.repository.CategoriaJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryCategoriaRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryInventoryStore;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryLoteRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryMedicamentoRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
 import com.pharmaguard.api.inventory.application.CategoriaUseCase;
 import com.pharmaguard.api.inventory.application.CategoriaUseCaseImpl;
 import com.pharmaguard.api.inventory.application.LoteUseCase;
@@ -8,12 +14,6 @@ import com.pharmaguard.api.inventory.application.MedicamentoUseCase;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCaseImpl;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCase;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCaseImpl;
-import com.pharmaguard.api.inventory.adapters.out.repository.CategoriaJpaRepository;
-import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryCategoriaRepositoryAdapter;
-import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryInventoryStore;
-import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryLoteRepositoryAdapter;
-import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryMedicamentoRepositoryAdapter;
-import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
