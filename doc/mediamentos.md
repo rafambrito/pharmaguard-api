@@ -23,16 +23,16 @@
 - application
   - Casos de uso para criar, atualizar, consultar, listar e remover dados do catalogo de medicamentos.
   - Ports de entrada e saida.
-- infrastructure
+- adapters.out
   - Adapters de persistencia JPA, mapeamentos e configuracoes necessarias ao modulo.
-- api
+- adapters.in
   - Endpoints REST, DTOs, validacoes de entrada e mapeamento request/response.
 
 ### 2.2 Fluxo principal (resumo)
 - API recebe requisicao.
 - Application executa o caso de uso.
 - Domain aplica regras de catalogo, validade e lote.
-- Infrastructure persiste e consulta os dados.
+- adapters.out persiste e consulta os dados.
 - API retorna resposta padronizada.
 
 ## 3. Regras
@@ -140,8 +140,8 @@
 
 | Status | Criterio |
 |--------|----------|
-| X - Pendente | Modulo compilando |
-| X - Pendente | Contrato OpenAPI do modulo medicamentos definido |
+| ✅ Concluído | Modulo compilando |
+| ✅ Concluído  | Contrato OpenAPI do modulo medicamentos definido |
 | X - Pendente | CRUD de categorias funcionando |
 | X - Pendente | CRUD de unidades de medida funcionando |
 | X - Pendente | CRUD de medicamentos funcionando |

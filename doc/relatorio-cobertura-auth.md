@@ -7,8 +7,8 @@ Escopo de testes executados:
 - src/test/java/com/pharmaguard/api/auth/application/RenovarSessaoUseCaseImplTest.java
 - src/test/java/com/pharmaguard/api/auth/application/UsuarioUseCaseImplTest.java
 - src/test/java/com/pharmaguard/api/auth/domain/UsuarioTest.java
-- src/test/java/com/pharmaguard/api/auth/api/integration/UsuarioControllerIntegrationTest.java
-- src/test/java/com/pharmaguard/api/auth/api/integration/AuthControllerIntegrationTest.java
+- src/test/java/com/pharmaguard/api/auth/adapters/in/integration/UsuarioControllerIntegrationTest.java
+- src/test/java/com/pharmaguard/api/auth/adapters/in/integration/AuthControllerIntegrationTest.java
 
 Resultado dos testes:
 - 46 passed
@@ -25,17 +25,17 @@ Cobertura por arquivo:
 | src/main/java/com/pharmaguard/api/auth/application/UsuarioUseCaseImpl.java | 92.7% |
 | src/main/java/com/pharmaguard/api/auth/application/RenovarSessaoUseCaseImpl.java | 92.9% |
 | src/main/java/com/pharmaguard/api/auth/application/AutenticarUsuarioUseCaseImpl.java | 92.3% |
-| src/main/java/com/pharmaguard/api/auth/infrastructure/repository/InMemoryAuthRepositoryAdapter.java | 76.4% |
-| src/main/java/com/pharmaguard/api/auth/infrastructure/config/UseCaseConfig.java | 0.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/out/repository/InMemoryAuthRepositoryAdapter.java | 76.4% |
+| src/main/java/com/pharmaguard/api/auth/adapters/out/config/UseCaseConfig.java | 0.0% |
 | src/main/java/com/pharmaguard/api/auth/domain/UsuarioRegraIdentidadeUnica.java | 100.0% |
 | src/main/java/com/pharmaguard/api/auth/domain/Perfil.java | 32.4% |
 | src/main/java/com/pharmaguard/api/auth/domain/Usuario.java | 80.2% |
-| src/main/java/com/pharmaguard/api/auth/api/mapper/UsuarioApiMapper.java | 85.7% |
-| src/main/java/com/pharmaguard/api/auth/api/controller/UsuarioController.java | 93.5% |
-| src/main/java/com/pharmaguard/api/auth/api/controller/AuthController.java | 100.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/response/PerfilResponse.java | 0.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/response/TokenResponse.java | 100.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/response/UsuarioResponse.java | 100.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/request/CriarUsuarioRequest.java | 100.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/request/AtualizarUsuarioRequest.java | 100.0% |
-| src/main/java/com/pharmaguard/api/auth/api/dto/request/RenovarSessaoRequest.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/mapper/UsuarioAdapterInMapper.java | 85.7% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/controller/UsuarioController.java | 93.5% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/controller/AuthController.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/response/PerfilResponse.java | 0.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/response/TokenResponse.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/response/UsuarioResponse.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/request/CriarUsuarioRequest.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/request/AtualizarUsuarioRequest.java | 100.0% |
+| src/main/java/com/pharmaguard/api/auth/adapters/in/dto/request/RenovarSessaoRequest.java | 100.0% |

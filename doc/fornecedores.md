@@ -21,16 +21,16 @@
 - application
   - Casos de uso para criar, atualizar, consultar, listar e remover fornecedores e seus contatos.
   - Ports de entrada e saida.
-- infrastructure
+- adapters.out
   - Adapters de persistencia JPA, mapeamentos e configuracoes necessarias ao modulo.
-- api
+- adapters.in
   - Endpoints REST, DTOs, validacoes de entrada e mapeamento request/response.
 
 ### 2.2 Fluxo principal (resumo)
 - API recebe requisicao.
 - Application executa o caso de uso.
 - Domain aplica regras de fornecedor, contato e lead time.
-- Infrastructure persiste e consulta os dados.
+- adapters.out persiste e consulta os dados.
 - API retorna resposta padronizada.
 
 ## 3. Regras
@@ -57,57 +57,57 @@
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.1 | Criar entidade Fornecedor no dominio | classe Fornecedor na camada domain | X - Pendente |
-| T3.1.1 | Definir atributos obrigatorios | modelo com nome, documento ou codigo, status e lead time base | X - Pendente |
-| T3.1.2 | Definir regra de unicidade | regra para evitar fornecedor duplicado | X - Pendente |
+| T3.1 | Criar entidade Fornecedor no dominio | classe Fornecedor na camada domain | ✅ Concluído |
+| T3.1.1 | Definir atributos obrigatorios | modelo com nome, documento ou codigo, status e lead time base | ✅ Concluído |
+| T3.1.2 | Definir regra de unicidade | regra para evitar fornecedor duplicado | ✅ Concluído |
 
 ### T2 - Criar Entidade ContatoFornecedor
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.2 | Criar entidade ContatoFornecedor no dominio | classe de contato vinculada ao fornecedor | X - Pendente |
-| T3.2.1 | Definir atributos obrigatorios | modelo com nome, cargo opcional, telefone, email e canal principal | X - Pendente |
-| T3.2.2 | Definir relacao com fornecedor | associacao consistente entre fornecedor e contatos | X - Pendente |
+| T3.2 | Criar entidade ContatoFornecedor no dominio | classe de contato vinculada ao fornecedor | ✅ Concluído |
+| T3.2.1 | Definir atributos obrigatorios | modelo com nome, cargo opcional, telefone, email e canal principal | ✅ Concluído |
+| T3.2.2 | Definir relacao com fornecedor | associacao consistente entre fornecedor e contatos | ✅ Concluído |
 
 ### T3 - Criar Regras de Lead Time
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.3 | Criar regras de lead time no dominio | objeto ou regras para prazo medio de atendimento | X - Pendente |
-| T3.3.1 | Validar consistencia do prazo | regra para impedir valores negativos ou invalidos | X - Pendente |
-| T3.3.2 | Preparar classificacao basica de prazo | regra pronta para diferenciar prazos usuais e elevados | X - Pendente |
+| T3.3 | Criar regras de lead time no dominio | objeto ou regras para prazo medio de atendimento | ✅ Concluído |
+| T3.3.1 | Validar consistencia do prazo | regra para impedir valores negativos ou invalidos | ✅ Concluído |
+| T3.3.2 | Preparar classificacao basica de prazo | regra pronta para diferenciar prazos usuais e elevados | ✅ Concluído |
 
 ### T4 - Casos de Uso (Application)
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.4 | Criar casos de uso de Fornecedor | servicos de aplicacao para CRUD de fornecedor | X - Pendente |
-| T3.4.1 | Criar casos de uso de contatos | servicos para adicionar, atualizar, listar e remover contatos | X - Pendente |
-| T3.4.2 | Criar casos de uso de lead time | servicos para cadastrar e atualizar o prazo do fornecedor | X - Pendente |
+| T3.4 | Criar casos de uso de Fornecedor | servicos de aplicacao para CRUD de fornecedor | ✅ Concluído |
+| T3.4.1 | Criar casos de uso de contatos | servicos para adicionar, atualizar, listar e remover contatos | ✅ Concluído |
+| T3.4.2 | Criar casos de uso de lead time | servicos para cadastrar e atualizar o prazo do fornecedor | ✅ Concluído |
 
 ### T5 - Repository / Persistencia
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.5 | Definir portas de repositorio | interfaces de saida no application | X - Pendente |
-| T3.5.1 | Implementar adapters JPA | repositorios JPA para fornecedor e contatos | X - Pendente |
-| T3.5.2 | Mapear entidades de persistencia | entidades JPA e relacionamentos consistentes | X - Pendente |
+| T3.5 | Definir portas de repositorio | interfaces de saida no application | ✅ Concluído |
+| T3.5.1 | Implementar adapters JPA | repositorios JPA para fornecedor e contatos | ✅ Concluído |
+| T3.5.2 | Mapear entidades de persistencia | entidades JPA e relacionamentos consistentes | ✅ Concluído |
 
 ### T6 - Endpoints
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.6 | Expor endpoints CRUD de fornecedor | controller/resource com operacoes CRUD de fornecedor | X - Pendente |
-| T3.6.1 | Expor endpoints de contatos | endpoints para gestao de contatos do fornecedor | X - Pendente |
-| T3.6.2 | Expor endpoint de lead time | endpoint para consulta e atualizacao do prazo do fornecedor | X - Pendente |
+| T3.6 | Expor endpoints CRUD de fornecedor | controller/resource com operacoes CRUD de fornecedor | ✅ Concluído |
+| T3.6.1 | Expor endpoints de contatos | endpoints para gestao de contatos do fornecedor | ✅ Concluído |
+| T3.6.2 | Expor endpoint de lead time | endpoint para consulta e atualizacao do prazo do fornecedor | ✅ Concluído |
 
 ### T7 - Validacoes e Mensagens
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T3.7 | Aplicar validacoes de entrada | DTOs validados e respostas de erro padrao | X - Pendente |
-| T3.7.1 | Reutilizar mensagens no arquivo global | chaves do modulo adicionadas em `message.properties` | X - Pendente |
-| T3.7.2 | Integrar mensagens em validacoes e excecoes | erros com mensagens centralizadas | X - Pendente |
+| T3.7 | Aplicar validacoes de entrada | DTOs validados e respostas de erro padrao | ✅ Concluído |
+| T3.7.1 | Reutilizar mensagens no arquivo global | chaves do modulo adicionadas em `message.properties` | ✅ Concluído |
+| T3.7.2 | Integrar mensagens em validacoes e excecoes | erros com mensagens centralizadas | ✅ Concluído |
 
 ### T8 - Testes
 
@@ -116,16 +116,22 @@
 | T3.8 | Criar testes unitarios de dominio e application | suite cobrindo regras e casos de uso principais | X - Pendente |
 | T3.8.1 | Criar testes de integracao da API de fornecedores | cenarios CRUD, contatos e lead time validados | X - Pendente |
 | T3.8.2 | Gerar cobertura minima do modulo | relatorio de cobertura da etapa de fornecedores | X - Pendente |
+| T3.8 | Criar testes unitarios de dominio e application | suite cobrindo regras e casos de uso principais | ✅ Concluído |
+| T3.8.1 | Criar testes de integracao da API de fornecedores | cenarios CRUD, contatos e lead time validados | ✅ Concluído |
+| T3.8.2 | Gerar cobertura minima do modulo | relatorio de cobertura da etapa de fornecedores | ✅ Concluído |
 
 ## 5. Criterios de Aceite
 
 | Status | Criterio |
 |--------|----------|
-| X - Pendente | Modulo compilando |
+| ✅ Concluído | Modulo compilando |
 | X - Pendente | Contrato OpenAPI do modulo fornecedores definido |
 | X - Pendente | CRUD de fornecedores funcionando |
 | X - Pendente | Cadastro e manutencao de contatos funcionando |
 | X - Pendente | Cadastro e atualizacao de lead time funcionando |
-| X - Pendente | Mensagens centralizadas em `message.properties` |
-| X - Pendente | Testes unitarios e de integracao executando |
-| X - Pendente | Cobertura minima do modulo gerada |
+| ✅ Concluído | Mensagens centralizadas em `message.properties` |
+| ✅ Concluído| Testes unitarios e de integracao executando |
+| ✅ Concluído| Cobertura minima do modulo gerada |
+| ✅ Concluído | Mensagens centralizadas em `message.properties` |
+| ✅ Concluído | Testes unitarios e de integracao executando |
+| ✅ Concluído | Cobertura minima do modulo gerada |

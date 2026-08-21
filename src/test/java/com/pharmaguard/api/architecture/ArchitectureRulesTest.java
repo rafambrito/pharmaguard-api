@@ -15,7 +15,7 @@ class ArchitectureRulesTest {
 
     private static final String AUTH_DOMAIN = "com.pharmaguard.api.auth.domain..";
     private static final String AUTH_APPLICATION = "com.pharmaguard.api.auth.application..";
-    private static final String AUTH_API = "com.pharmaguard.api.auth.api..";
+        private static final String AUTH_ADAPTERS_IN = "com.pharmaguard.api.auth.adapters.in..";
     private static final String SHARED_DOMAIN = "com.pharmaguard.api.shared.domain..";
     private static final String SHARED_CONFIG = "com.pharmaguard.api.shared.config..";
 
@@ -38,7 +38,7 @@ class ArchitectureRulesTest {
     }
 
     @Test
-    void application_should_not_depend_on_api_or_infrastructure() {
+        void application_should_not_depend_on_adapters() {
         ArchRule rule = classes()
                 .that().resideInAnyPackage(AUTH_APPLICATION)
                 .should().onlyDependOnClassesThat().resideInAnyPackage(
@@ -54,11 +54,11 @@ class ArchitectureRulesTest {
     }
 
     @Test
-    void api_should_not_depend_on_infrastructure() {
+    void adapters_in_should_not_depend_on_adapters_out() {
         ArchRule rule = classes()
-                .that().resideInAnyPackage(AUTH_API)
+                .that().resideInAnyPackage(AUTH_ADAPTERS_IN)
                 .should().onlyDependOnClassesThat().resideInAnyPackage(
-                        AUTH_API,
+                        AUTH_ADAPTERS_IN,
                         AUTH_APPLICATION,
                         AUTH_DOMAIN,
                         SHARED_DOMAIN,

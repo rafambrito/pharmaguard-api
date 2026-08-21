@@ -27,6 +27,9 @@ public final class MessageKeys {
 
     public static final String MSG_RECURSO_USUARIO_NAO_ENCONTRADO = "msg.recurso.usuario.nao.encontrado";
 
+    public static final String MSG_RECURSO_FORNECEDOR_NAO_ENCONTRADO = "msg.recurso.fornecedor.nao.encontrado";
+    public static final String MSG_RECURSO_CONTATO_FORNECEDOR_NAO_ENCONTRADO = "msg.recurso.contato.fornecedor.nao.encontrado";
+
     public static final String MSG_RECURSO_CATEGORIA_NAO_ENCONTRADA = "msg.recurso.categoria.nao.encontrada";
     public static final String MSG_RECURSO_UNIDADE_MEDIDA_NAO_ENCONTRADA = "msg.recurso.unidade.medida.nao.encontrada";
     public static final String MSG_RECURSO_MEDICAMENTO_NAO_ENCONTRADO = "msg.recurso.medicamento.nao.encontrado";
@@ -51,4 +54,13 @@ public final class MessageKeys {
     public static final String MSG_VALIDACAO_DATA_VALIDADE_OBRIGATORIA = "msg.validacao.data.validade.obrigatoria";
     public static final String MSG_VALIDACAO_QUANTIDADE_INICIAL_OBRIGATORIA = "msg.validacao.quantidade.inicial.obrigatoria";
     public static final String MSG_VALIDACAO_QUANTIDADE_INICIAL_MINIMA = "msg.validacao.quantidade.inicial.minima";
+    public static final String MSG_VALIDACAO_CODIGO_OBRIGATORIO = "msg.validacao.codigo.obrigatorio";
+    public static final String MSG_VALIDACAO_CODIGO_TAMANHO_MAXIMO = "msg.validacao.codigo.tamanho.maximo";
+    public static final String MSG_VALIDACAO_DOCUMENTO_TAMANHO_MAXIMO = "msg.validacao.documento.tamanho.maximo";
+    public static final String MSG_VALIDACAO_CARGO_TAMANHO_MAXIMO = "msg.validacao.cargo.tamanho.maximo";
+    public static final String MSG_VALIDACAO_TELEFONE_TAMANHO_MAXIMO = "msg.validacao.telefone.tamanho.maximo";
+    public static final String MSG_VALIDACAO_CANAL_PRINCIPAL_OBRIGATORIO = "msg.validacao.canal.principal.obrigatorio";
+    public static final String MSG_VALIDACAO_CANAL_PRINCIPAL_TAMANHO_MAXIMO = "msg.validacao.canal.principal.tamanho.maximo";
+    public static final String MSG_VALIDACAO_LEAD_TIME_OBRIGATORIO = "msg.validacao.lead.time.obrigatorio";
+    public static final String MSG_VALIDACAO_LEAD_TIME_NEGATIVO = "msg.validacao.lead.time.negativo";
 }

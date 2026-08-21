@@ -108,19 +108,19 @@ O MVP será construído como um **monólito modular**, organizado segundo princ�
 com.pharmaguard.api
 │
 ├── auth
-│   ├── api
+│   ├── adpaters
 │   ├── application
 │   ├── domain
 │   └── infrastructure
 │
 ├── inventory
-│   ├── api
+│   ├── adpaters
 │   ├── application
 │   ├── domain
 │   └── infrastructure
 │
 ├── supplier
-│   ├── api
+│   ├── adpaters
 │   ├── application
 │   ├── domain
 │   └── infrastructure
@@ -135,7 +135,7 @@ com.pharmaguard.api
 │   └── infrastructure
 │
 ├── reports
-│   ├── api
+│   ├── adpaters
 │   ├── application
 │   └── infrastructure
 │
@@ -145,7 +145,7 @@ com.pharmaguard.api
 ### Princípio de dependência
 
 ```text
-API
+ADAPTERS
  │
  ▼
 Application
