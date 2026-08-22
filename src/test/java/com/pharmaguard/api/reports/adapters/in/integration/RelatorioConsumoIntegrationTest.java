@@ -50,6 +50,8 @@ class RelatorioConsumoIntegrationTest {
                 .andExpect(jsonPath("$.mediaDiaria", is(2.0)))
                 .andExpect(jsonPath("$.tendencia", is("ESTAVEL")))
                 .andExpect(jsonPath("$.itens[0].nomeMedicamento", is("Amoxicilina")))
+                .andExpect(jsonPath("$.itens[0].categoriaNome", is("Antibioticos")))
+                .andExpect(jsonPath("$.itens[0].unidadeMedidaSigla", is("MG")))
                 .andExpect(jsonPath("$.itens[0].quantidadeConsumida", is(60.0)));
     }
 

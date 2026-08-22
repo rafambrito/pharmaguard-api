@@ -74,13 +74,20 @@ O motor estatístico deve estar alinhado ao módulo analytics e seguir a mesma l
 
 ## 6. Divisão de tarefas proposta
 
-### T6.0 - Definição da base analítica
+### T6.0 - Definição da base analítica - ✅ Concluído
 
 - levantar o histórico de movimentações do estoque;
 - identificar a granularidade da análise: por medicamento, lote, categoria ou período;
 - definir fontes de dados e regras de agregação.
 
-### T6.1 - Definição de indicadores estatísticos
+Implementado:
+
+- base analítica consolidada por medicamento e período para consumo e reposição;
+- fontes de dados definidas: movimentações de saída, saldos por lote, cadastro de medicamentos e lead time do fornecedor;
+- granularidade operacional adotada para a etapa: medicamento por período (com rastreabilidade para lote via saldo e movimentação);
+- regra de agregação formalizada: consumo total no período, consumo médio diário, saldo atual consolidado e lead time aplicado.
+
+### T6.1 - Definição de indicadores estatísticos - ✅ Concluído
 
 - consumo médio diário;
 - desvio padrão do consumo;
@@ -88,7 +95,15 @@ O motor estatístico deve estar alinhado ao módulo analytics e seguir a mesma l
 - média ajustada;
 - intervalo de previsão por período.
 
-### T6.2 - Cálculo de nível de estoque
+Implementado:
+
+- consumo médio diário calculado por medicamento com base na série diária do período;
+- desvio padrão do consumo diário para medir variabilidade;
+- tendência de consumo definida por comparação entre a primeira e a segunda metade da série (queda, estável, crescimento);
+- média ajustada calculada com fator de tendência e amortecimento por variabilidade;
+- intervalo de previsão do período calculado por banda estatística a partir da média ajustada e desvio padrão.
+
+### T6.2 - Cálculo de nível de estoque - ✅ Concluído
 
 - estoque mínimo;
 - estoque máximo;
@@ -96,39 +111,83 @@ O motor estatístico deve estar alinhado ao módulo analytics e seguir a mesma l
 - cobertura de demanda por período;
 - risco de ruptura.
 
-### T6.3 - Análise de validade e vencimento
+Implementado:
+
+- estoque de segurança calculado por variabilidade de consumo (desvio padrão) e lead time;
+- estoque mínimo calculado por demanda ajustada no lead time somada ao estoque de segurança;
+- estoque máximo calculado por janela adicional de cobertura sobre o estoque mínimo;
+- cobertura de demanda calculada em dias com base no saldo atual e consumo médio ajustado;
+- risco de ruptura classificado em baixo, médio, alto e crítico, aplicado na priorização de reposição.
+
+### T6.3 - Análise de validade e vencimento - ✅ Concluído
 
 - risco de vencimento por lote;
 - avaliação de itens próximos do vencimento;
 - impacto da validade no consumo real;
 - suporte para política FEFO.
 
-### T6.4 - Recomendação de reposição
+Implementado:
+
+- risco de vencimento calculado por medicamento com consolidação por lote (válido, próximo do vencimento e vencido);
+- avaliação de itens próximos do vencimento com dias para o próximo vencimento e percentual de estoque em risco;
+- impacto da validade no consumo real aplicado via fator de aproveitamento e saldo aproveitável para reposição;
+- suporte à política FEFO por priorização automática quando há lotes em risco de vencimento.
+
+### T6.4 - Recomendação de reposição - ✅ Concluído
 
 - identificar itens com demanda crescente;
 - combinar consumo, prazo e validade;
 - sugerir quantidade recomendada de compra;
 - sinalizar itens críticos ou em risco.
 
-### T6.5 - Alertas e relatórios
+Implementado:
+
+- identificação de itens com demanda crescente a partir da tendência de consumo (série histórica);
+- recomendação combinando consumo ajustado, lead time do fornecedor e risco de validade/vencimento;
+- cálculo de quantidade sugerida de compra por estoque alvo ajustado (nível máximo + ajustes de demanda e validade);
+- sinalização de itens críticos ou em risco por urgência e prioridade, com justificativa analítica por item.
+
+### T6.5 - Alertas e relatórios - ✅ Concluído
 
 - alertas de ruptura;
 - alertas de vencimento;
 - alertas de excesso de estoque;
 - relatórios de consumo e criticidade.
 
-### T6.6 - Integração com o restante do sistema
+Implementado:
+
+- relatório consolidado de alertas com endpoint dedicado para ruptura, vencimento e excesso de estoque;
+- alerta de ruptura baseado em risco de nível de estoque e cobertura de demanda;
+- alerta de vencimento baseado em risco de validade por lote e impacto no consumo real;
+- alerta de excesso de estoque por comparação entre saldo aproveitável e estoque máximo calculado;
+- resumo analítico no relatório com total consumido no período e total de itens críticos.
+
+### T6.6 - Integração com o restante do sistema - ✅ Concluído
 
 - expor métricas para API ou relatórios;
 - integrar motor a módulos de estoque e inventário;
 - preparar integração com scheduler e dashboards.
 
-### T6.7 - Testes e validação
+Implementado:
+
+- endpoint de métricas integradas do motor estatístico para consumo por API e relatórios;
+- integração direta com dados de estoque/inventário via base analítica consolidada no adapter de relatórios;
+- exposição de métricas operacionais para orquestração externa (itens com reposição sugerida, riscos e cobertura);
+- resposta preparada para integração com scheduler e dashboards com sinalização explícita de prontidão.
+
+### T6.7 - Testes e validação - ✅ Concluído
 
 - validar cálculos estatísticos com dados reais e sintéticos;
 - testar cenários de consumo estável, alto e irregular;
 - validar regras de alerta e reposição;
 - garantir consistência com o módulo de medicamentos e estoque.
+
+Implementado:
+
+- validação dos cálculos estatísticos com dados sintéticos em múltiplos cenários de consumo;
+- testes explícitos para cenários de consumo estável, alto com tendência de crescimento e irregular com alta variação;
+- validação das regras de alerta e reposição com priorização por risco e quantidade sugerida;
+- validação de consistência entre consumo analítico e atributos de medicamento/estoque (categoria, unidade e movimentação).
 
 ## 7. Critérios de aceite da etapa
 
