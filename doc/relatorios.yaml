@@ -1,0 +1,500 @@
+openapi: 3.0.3
+info:
+  title: PharmaGuard API - Modulo Relatorios
+  version: "1.0.0"
+  description: Contrato OpenAPI para consultas analiticas de consumo, criticidade, estoque minimo, vencimentos e reposicao
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /api/v1/relatorios/consumo:
+    get:
+      tags:
+        - Relatorios
+      summary: Gerar relatorio de consumo historico
+      operationId: gerarRelatorioConsumo
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+        - $ref: "#/components/parameters/fornecedorId"
+      responses:
+        "200":
+          description: Relatorio de consumo gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioConsumoResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+  /api/v1/relatorios/produtos-criticos:
+    get:
+      tags:
+        - Relatorios
+      summary: Gerar relatorio de produtos criticos
+      operationId: gerarRelatorioProdutosCriticos
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+      responses:
+        "200":
+          description: Relatorio de produtos criticos gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioProdutosCriticosResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+  /api/v1/relatorios/estoque-minimo:
+    get:
+      tags:
+        - Relatorios
+      summary: Gerar relatorio de estoque minimo
+      operationId: gerarRelatorioEstoqueMinimo
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+      responses:
+        "200":
+          description: Relatorio de estoque minimo gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioEstoqueMinimoResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+  /api/v1/relatorios/vencimentos:
+    get:
+      tags:
+        - Relatorios
+      summary: Gerar relatorio de vencimentos
+      operationId: gerarRelatorioVencimentos
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+      responses:
+        "200":
+          description: Relatorio de vencimentos gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioVencimentosResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+  /api/v1/relatorios/reposicao:
+    get:
+      tags:
+        - Relatorios
+      summary: Gerar relatorio de reposicao
+      operationId: gerarRelatorioReposicao
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+        - $ref: "#/components/parameters/fornecedorId"
+      responses:
+        "200":
+          description: Relatorio de reposicao gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioReposicaoResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+components:
+  parameters:
+    periodoInicio:
+      name: periodoInicio
+      in: query
+      required: true
+      description: Data inicial do periodo de analise.
+      schema:
+        type: string
+        format: date
+        example: "2026-01-01"
+
+    periodoFim:
+      name: periodoFim
+      in: query
+      required: true
+      description: Data final do periodo de analise.
+      schema:
+        type: string
+        format: date
+        example: "2026-01-31"
+
+    medicamentoId:
+      name: medicamentoId
+      in: query
+      required: false
+      description: Codigo do medicamento para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 10
+
+    categoriaId:
+      name: categoriaId
+      in: query
+      required: false
+      description: Codigo da categoria para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 2
+
+    unidadeMedidaId:
+      name: unidadeMedidaId
+      in: query
+      required: false
+      description: Codigo da unidade de medida para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+    fornecedorId:
+      name: fornecedorId
+      in: query
+      required: false
+      description: Codigo do fornecedor para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 5
+
+  schemas:
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    ValidationProblemDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemDetail"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/FieldError"
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+
+    FiltroRelatorio:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+          nullable: true
+        categoriaId:
+          type: integer
+          format: int64
+          nullable: true
+        unidadeMedidaId:
+          type: integer
+          format: int64
+          nullable: true
+        fornecedorId:
+          type: integer
+          format: int64
+          nullable: true
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+
+    ConsumoMedicamentoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        categoriaNome:
+          type: string
+          nullable: true
+        unidadeMedidaSigla:
+          type: string
+          nullable: true
+        quantidadeConsumida:
+          type: number
+          format: double
+        mediaDiaria:
+          type: number
+          format: double
+
+    RelatorioConsumoResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        filtro:
+          $ref: "#/components/schemas/FiltroRelatorio"
+        totalConsumido:
+          type: number
+          format: double
+        mediaDiaria:
+          type: number
+          format: double
+        tendencia:
+          type: string
+          enum:
+            - CRESCENTE
+            - ESTAVEL
+            - DECRESCENTE
+        itens:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConsumoMedicamentoItem"
+
+    ProdutoCriticoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        categoriaNome:
+          type: string
+          nullable: true
+        saldoAtual:
+          type: integer
+        consumoMedioDiario:
+          type: number
+          format: double
+        risco:
+          type: string
+          enum:
+            - BAIXO
+            - MEDIO
+            - ALTO
+            - CRITICO
+        urgencia:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+        descricaoRisco:
+          type: string
+
+    RelatorioProdutosCriticosResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        totalProdutosCriticos:
+          type: integer
+        itens:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProdutoCriticoItem"
+
+    EstoqueMinimoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        saldoAtual:
+          type: integer
+        estoqueMinimo:
+          type: integer
+        status:
+          type: string
+          enum:
+            - NORMAL
+            - BAIXO
+            - RUPTURA
+        necessidadeReposicao:
+          type: integer
+
+    RelatorioEstoqueMinimoResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        totalItensAbaixoMinimo:
+          type: integer
+        itens:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstoqueMinimoItem"
+
+    VencimentoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        numeroLote:
+          type: string
+        dataValidade:
+          type: string
+          format: date
+        quantidade:
+          type: integer
+        statusValidade:
+          type: string
+          enum:
+            - VALIDO
+            - PROXIMO_VENCIMENTO
+            - VENCIDO
+        severidade:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+            - CRITICA
+
+    RelatorioVencimentosResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        totalItensVencendo:
+          type: integer
+        itens:
+          type: array
+          items:
+            $ref: "#/components/schemas/VencimentoItem"
+
+    ReposicaoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        quantidadeSugerida:
+          type: integer
+        urgencia:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+            - CRITICA
+        prioridade:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+        fornecedorId:
+          type: integer
+          format: int64
+          nullable: true
+        leadTimeDias:
+          type: integer
+          nullable: true
+        justificativa:
+          type: string
+
+    RelatorioReposicaoResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        totalItensParaReposicao:
+          type: integer
+        itens:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReposicaoItem"

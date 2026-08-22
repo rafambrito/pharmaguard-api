@@ -7,13 +7,24 @@ import com.pharmaguard.api.inventory.adapters.in.dto.request.CadastrarLoteReques
 import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarCategoriaRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarMedicamentoRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarUnidadeMedidaRequest;
+import com.pharmaguard.api.inventory.adapters.in.dto.request.RegistrarEntradaRequest;
+import com.pharmaguard.api.inventory.adapters.in.dto.request.RegistrarSaidaRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.CategoriaResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.EntradaEstoqueResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.LoteResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.MedicamentoResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.MovimentacaoEstoqueResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.SaidaEstoqueResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.SaldoEstoqueResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.SaldoLoteResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.UnidadeMedidaResponse;
+import com.pharmaguard.api.inventory.domain.EntradaEstoque;
 import com.pharmaguard.api.inventory.domain.Categoria;
 import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
+import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
+import com.pharmaguard.api.inventory.domain.SaidaEstoque;
+import com.pharmaguard.api.inventory.domain.EstoqueAtual;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
 import com.pharmaguard.api.shared.config.MessageKeys;
 import org.springframework.stereotype.Component;
@@ -124,6 +135,84 @@ public class InventoryAdapterInMapper {
                 lote.getStatusValidade().name(),
                 lote.getMedicamento().getId(),
                 null);
+    }
+
+    public EntradaEstoque toDomain(RegistrarEntradaRequest request) {
+        EntradaEstoque entrada = new EntradaEstoque();
+        entrada.setQuantidade(request.quantidade());
+        entrada.setOrigem(request.origem());
+        entrada.setDocumento(request.documento());
+        entrada.setObservacao(request.observacao());
+        return entrada;
+    }
+
+    public EntradaEstoqueResponse toResponse(EntradaEstoque entrada) {
+        return new EntradaEstoqueResponse(
+                entrada.getId(),
+                entrada.getMedicamento().getId(),
+                entrada.getLote().getId(),
+                entrada.getQuantidade(),
+                entrada.getOrigem(),
+                entrada.getDocumento(),
+                entrada.getObservacao(),
+                entrada.getDataEntrada(),
+                entrada.getUsuarioResponsavelId());
+    }
+
+    public SaidaEstoque toDomain(RegistrarSaidaRequest request) {
+        SaidaEstoque saida = new SaidaEstoque();
+        saida.setQuantidadeTotal(request.quantidade());
+        saida.setMotivo(request.motivo());
+        saida.setObservacao(request.observacao());
+        return saida;
+    }
+
+    public SaidaEstoqueResponse toResponse(SaidaEstoque saida) {
+        var lotes = saida.getLotesUtilizados().stream()
+                .map(item -> new SaidaEstoqueResponse.LoteConsumidoResponse(
+                        item.getLoteId(), item.getNumeroLote(), null, item.getQuantidadeConsumida()))
+                .toList();
+        return new SaidaEstoqueResponse(
+                saida.getId(),
+                saida.getMedicamento().getId(),
+                saida.getQuantidadeTotal(),
+                saida.getMotivo(),
+                saida.getObservacao(),
+                lotes,
+                saida.getDataSaida(),
+                saida.getUsuarioResponsavelId());
+    }
+
+    public MovimentacaoEstoqueResponse toResponse(MovimentacaoEstoque movimentacao) {
+        return new MovimentacaoEstoqueResponse(
+                movimentacao.getId(),
+                movimentacao.getTipo(),
+                movimentacao.getMedicamento().getId(),
+                movimentacao.getLote() == null ? null : movimentacao.getLote().getId(),
+                movimentacao.getQuantidade(),
+                movimentacao.getSaldoAposMovimentacao(),
+                movimentacao.getMotivo(),
+                movimentacao.getDataMovimentacao(),
+                movimentacao.getUsuarioResponsavelId());
+    }
+
+    public SaldoEstoqueResponse toResponse(EstoqueAtual estoque) {
+        return new SaldoEstoqueResponse(
+                estoque.getMedicamento().getId(),
+                estoque.getQuantidadeDisponivel(),
+                estoque.getQuantidadeReservada(),
+                estoque.getValidadeMaisProxima(),
+                estoque.getLotesAtivos().stream().map(this::toResponse).toList());
+    }
+
+    public SaldoLoteResponse toResponse(com.pharmaguard.api.inventory.domain.SaldoLoteEstoque saldo) {
+        return new SaldoLoteResponse(
+            saldo.getMedicamentoId(),
+                saldo.getLoteId(),
+                saldo.getNumeroLote(),
+                saldo.getDataValidade(),
+                saldo.getQuantidadeDisponivel(),
+                saldo.getStatusValidade());
     }
 
     private Medicamento.Criticidade parseCriticidade(String valor) {

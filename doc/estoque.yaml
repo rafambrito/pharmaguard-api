@@ -1,0 +1,597 @@
+openapi: 3.0.3
+info:
+  title: PharmaGuard API - Modulo Inventory - Estoque
+  version: "1.0.0"
+  description: Contrato OpenAPI para operacoes de entradas, saidas, movimentacoes, saldos e vencimentos de estoque
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /api/v1/estoque/entradas:
+    post:
+      tags:
+        - Entradas
+      summary: Registrar entrada de estoque
+      operationId: registrarEntradaEstoque
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrarEntradaRequest"
+      responses:
+        "201":
+          description: Entrada registrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaEstoqueResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Medicamento ou lote nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: Regra de negocio violada para entrada
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    get:
+      tags:
+        - Entradas
+      summary: Listar entradas de estoque
+      operationId: listarEntradasEstoque
+      parameters:
+        - name: medicamentoId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: loteId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Lista de entradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EntradaEstoqueResponse"
+
+  /api/v1/estoque/entradas/{id}:
+    get:
+      tags:
+        - Entradas
+      summary: Buscar entrada por id
+      operationId: buscarEntradaEstoquePorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Entrada encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaEstoqueResponse"
+        "404":
+          description: Entrada nao encontrada
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/estoque/saidas:
+    post:
+      tags:
+        - Saidas
+      summary: Registrar saida de estoque
+      operationId: registrarSaidaEstoque
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrarSaidaRequest"
+      responses:
+        "201":
+          description: Saida registrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaidaEstoqueResponse"
+        "400":
+          description: Dados invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "404":
+          description: Medicamento nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: Estoque insuficiente ou regra FEFO violada
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    get:
+      tags:
+        - Saidas
+      summary: Listar saidas de estoque
+      operationId: listarSaidasEstoque
+      parameters:
+        - name: medicamentoId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Lista de saidas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SaidaEstoqueResponse"
+
+  /api/v1/estoque/saidas/{id}:
+    get:
+      tags:
+        - Saidas
+      summary: Buscar saida por id
+      operationId: buscarSaidaEstoquePorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Saida encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaidaEstoqueResponse"
+        "404":
+          description: Saida nao encontrada
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/estoque/movimentacoes:
+    get:
+      tags:
+        - Movimentacoes
+      summary: Listar movimentacoes de estoque
+      operationId: listarMovimentacoesEstoque
+      parameters:
+        - name: medicamentoId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: loteId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: tipo
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/TipoMovimentacao"
+        - name: dataInicial
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: dataFinal
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Lista de movimentacoes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MovimentacaoEstoqueResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+
+  /api/v1/estoque/saldos/{medicamentoId}:
+    get:
+      tags:
+        - Saldos
+      summary: Consultar saldo por medicamento
+      operationId: consultarSaldoPorMedicamento
+      parameters:
+        - name: medicamentoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Saldo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaldoEstoqueResponse"
+        "404":
+          description: Medicamento nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/estoque/saldos/{medicamentoId}/lotes:
+    get:
+      tags:
+        - Saldos
+      summary: Consultar saldo por lote do medicamento
+      operationId: consultarSaldoPorLoteDoMedicamento
+      parameters:
+        - name: medicamentoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Saldos por lote
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SaldoLoteResponse"
+        "404":
+          description: Medicamento nao encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/estoque/vencimentos:
+    get:
+      tags:
+        - Vencimentos
+      summary: Listar lotes vencidos e proximos do vencimento
+      operationId: listarLotesPorVencimento
+      parameters:
+        - name: diasParaVencer
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 30
+      responses:
+        "200":
+          description: Lista de lotes por vencimento
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LoteVencimentoResponse"
+
+components:
+  schemas:
+
+    RegistrarEntradaRequest:
+      type: object
+      required:
+        - medicamentoId
+        - loteId
+        - quantidade
+        - origem
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+          example: 1
+        loteId:
+          type: integer
+          format: int64
+          example: 10
+        quantidade:
+          type: integer
+          minimum: 1
+          example: 200
+        origem:
+          type: string
+          enum:
+            - FORNECEDOR
+            - AJUSTE_INVENTARIO
+            - DEVOLUCAO
+            - TRANSFERENCIA_ENTRADA
+          example: FORNECEDOR
+        documento:
+          type: string
+          example: NF-2026-00045
+        observacao:
+          type: string
+          example: Entrada recebida em boas condicoes
+
+    EntradaEstoqueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        medicamentoId:
+          type: integer
+          format: int64
+        loteId:
+          type: integer
+          format: int64
+        quantidade:
+          type: integer
+        origem:
+          type: string
+        documento:
+          type: string
+        observacao:
+          type: string
+        dataEntrada:
+          type: string
+          format: date-time
+          nullable: true
+        usuarioResponsavelId:
+          type: integer
+          format: int64
+          nullable: true
+
+    RegistrarSaidaRequest:
+      type: object
+      required:
+        - medicamentoId
+        - quantidade
+        - motivo
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+          example: 1
+        quantidade:
+          type: integer
+          minimum: 1
+          example: 40
+        motivo:
+          type: string
+          enum:
+            - DISPENSACAO
+            - PERDA
+            - AJUSTE_INVENTARIO
+            - TRANSFERENCIA_SAIDA
+          example: DISPENSACAO
+        observacao:
+          type: string
+          example: Dispensacao para atendimento ambulatorial
+
+    LoteConsumoResponse:
+      type: object
+      properties:
+        loteId:
+          type: integer
+          format: int64
+        numeroLote:
+          type: string
+        dataValidade:
+          type: string
+          format: date
+        quantidadeConsumida:
+          type: integer
+
+    SaidaEstoqueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        medicamentoId:
+          type: integer
+          format: int64
+        quantidadeTotal:
+          type: integer
+        motivo:
+          type: string
+        observacao:
+          type: string
+        lotesConsumidos:
+          type: array
+          items:
+            $ref: "#/components/schemas/LoteConsumoResponse"
+        dataSaida:
+          type: string
+          format: date-time
+          nullable: true
+        usuarioResponsavelId:
+          type: integer
+          format: int64
+          nullable: true
+
+    TipoMovimentacao:
+      type: string
+      enum:
+        - ENTRADA
+        - SAIDA
+        - AJUSTE
+
+    MovimentacaoEstoqueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        tipo:
+          $ref: "#/components/schemas/TipoMovimentacao"
+        medicamentoId:
+          type: integer
+          format: int64
+        loteId:
+          type: integer
+          format: int64
+          nullable: true
+        quantidade:
+          type: integer
+        saldoAposMovimentacao:
+          type: integer
+        motivo:
+          type: string
+        dataMovimentacao:
+          type: string
+          format: date-time
+          nullable: true
+        usuarioResponsavelId:
+          type: integer
+          format: int64
+          nullable: true
+
+    SaldoEstoqueResponse:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        quantidadeDisponivel:
+          type: integer
+        quantidadeReservada:
+          type: integer
+        validadeMaisProxima:
+          type: string
+          format: date
+          nullable: true
+
+    SaldoLoteResponse:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        loteId:
+          type: integer
+          format: int64
+        numeroLote:
+          type: string
+        dataValidade:
+          type: string
+          format: date
+        quantidadeDisponivel:
+          type: integer
+        statusValidade:
+          type: string
+          enum:
+            - VALIDO
+            - PROXIMO_VENCIMENTO
+            - VENCIDO
+
+    LoteVencimentoResponse:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        loteId:
+          type: integer
+          format: int64
+        numeroLote:
+          type: string
+        dataValidade:
+          type: string
+          format: date
+        diasParaVencer:
+          type: integer
+        statusValidade:
+          type: string
+          enum:
+            - VALIDO
+            - PROXIMO_VENCIMENTO
+            - VENCIDO
+        quantidadeDisponivel:
+          type: integer
+
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    ValidationProblemDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemDetail"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/FieldError"
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string

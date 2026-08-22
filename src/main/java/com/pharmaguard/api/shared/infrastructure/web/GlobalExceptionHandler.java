@@ -9,9 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -22,6 +26,7 @@ import java.util.NoSuchElementException;
 import static com.pharmaguard.api.shared.config.MessageKeys.MSG_ERRO_GENERICO;
 import static com.pharmaguard.api.shared.config.MessageKeys.MSG_ERRO_REQUISICAO_INVALIDA_CAMPOS;
 import static com.pharmaguard.api.shared.config.MessageKeys.MSG_ERRO_REQUISICAO_INVALIDA_PARAMETROS;
+import static com.pharmaguard.api.shared.config.MessageKeys.MSG_VALIDACAO_PERIODO_OBRIGATORIO;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -96,6 +101,29 @@ public class GlobalExceptionHandler {
 
         problem.setProperty("errors", errors);
         return problem;
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    public ProblemDetail handleInvalidRequestFormat(Exception ex, HttpServletRequest request) {
+        LOGGER.warn("event=invalid_request_format path={} message={}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.BAD_REQUEST, "msg.erro.requisicao.invalida.formato", request);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ProblemDetail handleMissingRequestParameter(MissingServletRequestParameterException ex,
+                                                        HttpServletRequest request) {
+        LOGGER.warn("event=missing_request_parameter path={} parameter={}", request.getRequestURI(), ex.getParameterName());
+        String code = ex.getParameterName().startsWith("periodo")
+            ? MSG_VALIDACAO_PERIODO_OBRIGATORIO
+                : MSG_ERRO_REQUISICAO_INVALIDA_PARAMETROS;
+        return buildProblem(HttpStatus.BAD_REQUEST, code, request);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ProblemDetail handleMethodValidationException(HandlerMethodValidationException ex,
+                                                         HttpServletRequest request) {
+        LOGGER.warn("event=method_validation_error path={} message={}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.BAD_REQUEST, MSG_ERRO_REQUISICAO_INVALIDA_PARAMETROS, request);
     }
 
     @ExceptionHandler(Exception.class)

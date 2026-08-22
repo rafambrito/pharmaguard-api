@@ -54,81 +54,81 @@
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.0 | Definir estrategia API First para relatorios | contrato OpenAPI como fonte de verdade da API | X - Pendente |
-| T5.0.1 | Criar arquivo de contrato do modulo relatorios | arquivo yaml com paths e schemas dos relatorios | X - Pendente |
-| T5.0.2 | Validar padrao de respostas e erros | contratos de sucesso e erro alinhados ao projeto | X - Pendente |
+| T5.0 | Definir estrategia API First para relatorios | contrato OpenAPI como fonte de verdade da API | ✅ Concluído |
+| T5.0.1 | Criar arquivo de contrato do modulo relatorios | arquivo yaml com paths e schemas dos relatorios | ✅ Concluído |
+| T5.0.2 | Validar padrao de respostas e erros | contratos de sucesso e erro alinhados ao projeto | ✅ Concluído |
 
 ### T1 - Relatorio de Consumo
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.1 | Definir modelo de consumo historico | estrutura de dados para consumo por periodo | X - Pendente |
-| T5.1.1 | Definir filtros de consulta | periodo, medicamento, categoria e origem | X - Pendente |
-| T5.1.2 | Definir agregacoes basicas | total consumido, media diaria e tendencia | X - Pendente |
+| T5.1 | Definir modelo de consumo historico | estrutura de dados para consumo por periodo | ✅ Concluído |
+| T5.1.1 | Definir filtros de consulta | periodo, medicamento, categoria e origem | ✅ Concluído |
+| T5.1.2 | Definir agregacoes basicas | total consumido, media diaria e tendencia | ✅ Concluído |
 
 ### T2 - Relatorio de Produtos Criticos
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.2 | Definir criticidade funcional | regra para apontar itens em risco | X - Pendente |
-| T5.2.1 | Definir indicadores de criticidade | saldo, consumo, status e disponib. minima | X - Pendente |
-| T5.2.2 | Definir agrupamento | lista priorizada por risco e urgencia | X - Pendente |
+| T5.2 | Definir criticidade funcional | regra para apontar itens em risco | ✅ Concluído |
+| T5.2.1 | Definir indicadores de criticidade | saldo, consumo, status e disponib. minima | ✅ Concluído |
+| T5.2.2 | Definir agrupamento | lista priorizada por risco e urgencia | ✅ Concluído |
 
 ### T3 - Relatorio de Estoque Minimo
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.3 | Definir regra de estoque minimo | politicas e calculos de referencia | X - Pendente |
-| T5.3.1 | Mapear status do estoque | indicadores de baixo estoque e ruptura | X - Pendente |
-| T5.3.2 | Definir saidas do relatorio | lista de itens abaixo do minimo com contexto | X - Pendente |
+| T5.3 | Definir regra de estoque minimo | politicas e calculos de referencia | ✅ Concluído |
+| T5.3.1 | Mapear status do estoque | indicadores de baixo estoque e ruptura | ✅ Concluído |
+| T5.3.2 | Definir saidas do relatorio | lista de itens abaixo do minimo com contexto | ✅ Concluído |
 
 ### T4 - Relatorio de Vencimentos
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.4 | Definir regra de vencimento | criterios para itens proximos ou vencidos | X - Pendente |
-| T5.4.1 | Definir agrupamento por lote | lotes por medicamento, validade e quantidade | X - Pendente |
-| T5.4.2 | Definir severidade | alerta por prazo critico e risco de perda | X - Pendente |
+| T5.4 | Definir regra de vencimento | criterios para itens proximos ou vencidos | ✅ Concluído |
+| T5.4.1 | Definir agrupamento por lote | lotes por medicamento, validade e quantidade | ✅ Concluído |
+| T5.4.2 | Definir severidade | alerta por prazo critico e risco de perda | ✅ Concluído |
 
 ### T5 - Relatorio de Reposicao
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.5 | Definir regra de reposicao | recomendacao com base em consumo e lead time | X - Pendente |
-| T5.5.1 | Definir parametros de recomendacao | quantidade sugerida, urgencia e prioridade | X - Pendente |
-| T5.5.2 | Definir integracao com fornecedores | suporte ao lead time e perfil do fornecedor | X - Pendente |
+| T5.5 | Definir regra de reposicao | recomendacao com base em consumo e lead time | ✅ Concluído |
+| T5.5.1 | Definir parametros de recomendacao | quantidade sugerida, urgencia e prioridade | ✅ Concluído |
+| T5.5.2 | Definir integracao com fornecedores | suporte ao lead time e perfil do fornecedor | ✅ Concluído |
 
 ### T6 - Casos de Uso (Application)
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.6 | Criar casos de uso de relatorios | servicos de aplicacao para cada relatorio | X - Pendente |
-| T5.6.1 | Criar casos de uso de agregacao e filtros | composicao de consultas por periodo e criterio | X - Pendente |
-| T5.6.2 | Criar casos de uso de recomendacao | servicos para gerar ordem de reposicao e alerta | X - Pendente |
+| T5.6 | Criar casos de uso de relatorios | servicos de aplicacao para cada relatorio | ✅ Concluído |
+| T5.6.1 | Criar casos de uso de agregacao e filtros | composicao de consultas por periodo e criterio | ✅ Concluído |
+| T5.6.2 | Criar casos de uso de recomendacao | servicos para gerar ordem de reposicao e alerta | ✅ Concluído |
 
 ### T7 - Repository / Persistencia
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.7 | Definir portas de consulta | interfaces para leitura agregada e relatorios | X - Pendente |
-| T5.7.1 | Implementar adapters de consulta | queries JPA/SQL para consumos e estoque | X - Pendente |
-| T5.7.2 | Mapear projecoes e agregacoes | DTOs de apoio para relatorios e indicadores | X - Pendente |
+| T5.7 | Definir portas de consulta | interfaces para leitura agregada e relatorios | ✅ Concluído |
+| T5.7.1 | Implementar adapters de consulta | queries JPA/SQL para consumos e estoque | ✅ Concluído |
+| T5.7.2 | Mapear projecoes e agregacoes | DTOs de apoio para relatorios e indicadores | ✅ Concluído |
 
 ### T8 - Endpoints
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.8 | Expor endpoints de relatorios | controller/resource com endpoints do modulo | X - Pendente |
-| T5.8.1 | Expor endpoint de consumo | consulta de consumo e media por periodo | X - Pendente |
-| T5.8.2 | Expor endpoints de criticidade, vencimento e reposicao | endpoints de consulta analitica e priorizacao | X - Pendente |
+| T5.8 | Expor endpoints de relatorios | controller/resource com endpoints do modulo | ✅ Concluído |
+| T5.8.1 | Expor endpoint de consumo | consulta de consumo e media por periodo | ✅ Concluído |
+| T5.8.2 | Expor endpoints de criticidade, vencimento e reposicao | endpoints de consulta analitica e priorizacao | ✅ Concluído |
 
 ### T9 - Validacoes e Mensagens
 
 | ID   | Tarefa | Entregavel | Status |
 |------|--------|------------|--------|
-| T5.9 | Aplicar validacoes de entrada | DTOs validados e respostas padronizadas | X - Pendente |
-| T5.9.1 | Reutilizar mensagens no arquivo global | chaves do modulo adicionadas em `message.properties` | X - Pendente |
-| T5.9.2 | Integrar mensagens em validacoes e excecoes | erros centralizados e consistentes | X - Pendente |
+| T5.9 | Aplicar validacoes de entrada | DTOs validados e respostas padronizadas | ✅ Concluído |
+| T5.9.1 | Reutilizar mensagens no arquivo global | chaves do modulo adicionadas em `message.properties` | ✅ Concluído |
+| T5.9.2 | Integrar mensagens em validacoes e excecoes | erros centralizados e consistentes | ✅ Concluído |
 
 ### T10 - Testes
 
@@ -144,12 +144,12 @@
 |--------|----------|
 | X - Pendente | Modulo compilando |
 | X - Pendente | Contrato OpenAPI do modulo relatorios definido |
-| X - Pendente | Relatorio de consumo funcionando |
-| X - Pendente | Relatorio de produtos criticos funcionando |
-| X - Pendente | Relatorio de estoque minimo funcionando |
-| X - Pendente | Relatorio de vencimentos funcionando |
-| X - Pendente | Relatorio de reposicao funcionando |
-| X - Pendente | Mensagens centralizadas em `message.properties` |
+| ✅ Concluído | Relatorio de consumo funcionando |
+| ✅ Concluído | Relatorio de produtos criticos funcionando |
+| ✅ Concluído | Relatorio de estoque minimo funcionando |
+| ✅ Concluído | Relatorio de vencimentos funcionando |
+| ✅ Concluído | Relatorio de reposicao funcionando |
+| ✅ Concluído | Mensagens centralizadas em `message.properties` |
 | X - Pendente | Testes unitarios e de integracao executando |
 | X - Pendente | Cobertura minima do modulo gerada |
 

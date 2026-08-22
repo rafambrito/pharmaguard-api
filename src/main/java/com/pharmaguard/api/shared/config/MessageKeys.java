@@ -63,4 +63,17 @@ public final class MessageKeys {
     public static final String MSG_VALIDACAO_CANAL_PRINCIPAL_TAMANHO_MAXIMO = "msg.validacao.canal.principal.tamanho.maximo";
     public static final String MSG_VALIDACAO_LEAD_TIME_OBRIGATORIO = "msg.validacao.lead.time.obrigatorio";
     public static final String MSG_VALIDACAO_LEAD_TIME_NEGATIVO = "msg.validacao.lead.time.negativo";
+    public static final String MSG_VALIDACAO_MEDICAMENTO_ID_OBRIGATORIO = "msg.validacao.medicamento.id.obrigatorio";
+    public static final String MSG_VALIDACAO_LOTE_ID_OBRIGATORIO = "msg.validacao.lote.id.obrigatorio";
+    public static final String MSG_VALIDACAO_QUANTIDADE_OBRIGATORIA = "msg.validacao.quantidade.obrigatoria";
+    public static final String MSG_VALIDACAO_QUANTIDADE_MINIMA = "msg.validacao.quantidade.minima";
+    public static final String MSG_VALIDACAO_ORIGEM_OBRIGATORIA = "msg.validacao.origem.obrigatoria";
+    public static final String MSG_VALIDACAO_MOTIVO_OBRIGATORIO = "msg.validacao.motivo.obrigatorio";
+    public static final String MSG_VALIDACAO_ID_POSITIVO = "msg.validacao.id.positivo";
+    public static final String MSG_VALIDACAO_DOCUMENTO_ESTOQUE_TAMANHO_MAXIMO = "msg.validacao.documento.estoque.tamanho.maximo";
+    public static final String MSG_VALIDACAO_OBSERVACAO_TAMANHO_MAXIMO = "msg.validacao.observacao.tamanho.maximo";
+    public static final String MSG_ERRO_REQUISICAO_INVALIDA_FORMATO = "msg.erro.requisicao.invalida.formato";
+    public static final String MSG_VALIDACAO_PERIODO_OBRIGATORIO = "msg.validacao.periodo.obrigatorio";
+    public static final String MSG_VALIDACAO_PERIODO_INVALIDO = "msg.validacao.periodo.invalido";
+    public static final String MSG_VALIDACAO_FILTRO_OBRIGATORIO = "msg.validacao.filtro.obrigatorio";
 }

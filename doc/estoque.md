@@ -217,62 +217,62 @@ inventory/
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.0 | Definir contrato OpenAPI do módulo de estoque | arquivo de contrato do módulo | Planejado |
-| T4.0.1 | Definir schemas de entrada, saída e movimentação | DTOs e contracts do módulo | Planejado |
-| T4.0.2 | Padronizar respostas e erros | contratos de sucesso e erro | Planejado |
+| T4.0 | Definir contrato OpenAPI do módulo de estoque | arquivo de contrato do módulo | ✅ Concluído |
+| T4.0.1 | Definir schemas de entrada, saída e movimentação | DTOs e contracts do módulo | ✅ Concluído |
+| T4.0.2 | Padronizar respostas e erros | contratos de sucesso e erro | ✅ Concluído |
 
 ### T1 - Modelagem do domínio
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.1 | Criar entidades de domínio do estoque | entidades para entrada, saída e movimentação | Planejado |
-| T4.1.1 | Definir regras de quantidade e validade | validações puras no domínio | Planejado |
-| T4.1.2 | Definir regra de FEFO | lógica de priorização de lotes | Planejado |
-| T4.1.3 | Definir regra de saldo e lote válido | comportamento do domínio para controle de estoque | Planejado |
+| T4.1 | Criar entidades de domínio do estoque | entidades para entrada, saída e movimentação | ✅ Concluído |
+| T4.1.1 | Definir regras de quantidade e validade | validações puras no domínio | ✅ Concluído |
+| T4.1.2 | Definir regra de FEFO | lógica de priorização de lotes | ✅ Concluído |
+| T4.1.3 | Definir regra de saldo e lote válido | comportamento do domínio para controle de estoque | ✅ Concluído |
 
 ### T2 - Casos de uso
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.2 | Criar casos de uso de entrada | fluxo de cadastro e consulta de entradas | Planejado |
-| T4.2.1 | Criar casos de uso de saída | fluxo de baixa e validações | Planejado |
-| T4.2.2 | Criar casos de uso de consulta de saldo | consulta por medicamento e lote | Planejado |
-| T4.2.3 | Criar casos de uso de histórico | consulta de movimentações | Planejado |
+| T4.2 | Criar casos de uso de entrada | fluxo de cadastro e consulta de entradas | ✅ Concluído |
+| T4.2.1 | Criar casos de uso de saída | fluxo de baixa e validações | ✅ Concluído |
+| T4.2.2 | Criar casos de uso de consulta de saldo | consulta por medicamento e lote | ✅ Concluído |
+| T4.2.3 | Criar casos de uso de histórico | consulta de movimentações | ✅ Concluído |
 
 ### T3 - Ports e persistência
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.3 | Definir portas de saída do módulo | interfaces de repositório | Planejado |
-| T4.3.1 | Implementar adapters JPA | repositories e mapeamentos | Planejado |
-| T4.3.2 | Mapear entidades de estoque | relações com medicamento, lote e usuário | Planejado |
-| T4.3.3 | Persistir movimentações | histórico consistente e auditável | Planejado |
+| T4.3 | Definir portas de saída do módulo | interfaces de repositório | ✅ Concluído |
+| T4.3.1 | Implementar adapters JPA | repositories e mapeamentos | ✅ Concluído |
+| T4.3.2 | Mapear entidades de estoque | relações com medicamento, lote e usuário | ✅ Concluído |
+| T4.3.3 | Persistir movimentações | histórico consistente e auditável | ✅ Concluído |
 
 ### T4 - API REST
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.4 | Expor endpoints de entrada | controller e DTOs de entrada | Planejado |
-| T4.4.1 | Expor endpoints de saída | controller e DTOs de saída | Planejado |
-| T4.4.2 | Expor endpoints de consulta de saldo | endpoints de leitura do estoque | Planejado |
-| T4.4.3 | Expor endpoints de histórico e vencimento | consultas de movimentação e validade | Planejado |
+| T4.4 | Expor endpoints de entrada | controller e DTOs de entrada | ✅ Concluído |
+| T4.4.1 | Expor endpoints de saída | controller e DTOs de saída | ✅ Concluído |
+| T4.4.2 | Expor endpoints de consulta de saldo | endpoints de leitura do estoque | ✅ Concluído |
+| T4.4.3 | Expor endpoints de histórico e vencimento | consultas de movimentação e validade | ✅ Concluído |
 
 ### T5 - Validações e mensagens
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.5 | Aplicar validações de entrada | DTOs e Bean Validation | Planejado |
-| T4.5.1 | Externalizar mensagens | chaves em message.properties | Planejado |
-| T4.5.2 | Integrar exceptions globais | respostas uniformes e compreensíveis | Planejado |
+| T4.5 | Aplicar validações de entrada | DTOs e Bean Validation | ✅ Concluído |
+| T4.5.1 | Externalizar mensagens | chaves em message.properties | ✅ Concluído |
+| T4.5.2 | Integrar exceptions globais | respostas uniformes e compreensíveis | ✅ Concluído |
 
 ### T6 - Testes
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T4.6 | Criar testes unitários do domínio | regras de FEFO, saldo e validade | Planejado |
-| T4.6.1 | Criar testes de casos de uso | entrada, saída e histórico | Planejado |
-| T4.6.2 | Criar testes de integração da API | cenários de estoque e movimentação | Planejado |
-| T4.6.3 | Validar cobertura do módulo | evidência de qualidade | Planejado |
+| T4.6 | Criar testes unitários do domínio | regras de FEFO, saldo e validade | ✅ Concluído |
+| T4.6.1 | Criar testes de casos de uso | entrada, saída e histórico | ✅ Concluído |
+| T4.6.2 | Criar testes de integração da API | cenários de estoque e movimentação | ✅ Concluído |
+| T4.6.3 | Validar cobertura do módulo | evidência de qualidade | ✅ Concluído |
 
 ## 9. Critérios de aceite do módulo
 

@@ -51,4 +51,7 @@ public final class MessageKeys {
     public static final String MSG_VALIDACAO_DATA_VALIDADE_OBRIGATORIA = "msg.validacao.data.validade.obrigatoria";
     public static final String MSG_VALIDACAO_QUANTIDADE_INICIAL_OBRIGATORIA = "msg.validacao.quantidade.inicial.obrigatoria";
     public static final String MSG_VALIDACAO_QUANTIDADE_INICIAL_MINIMA = "msg.validacao.quantidade.inicial.minima";
+    public static final String MSG_VALIDACAO_PERIODO_OBRIGATORIO = "msg.validacao.periodo.obrigatorio";
+    public static final String MSG_VALIDACAO_PERIODO_INVALIDO = "msg.validacao.periodo.invalido";
+    public static final String MSG_VALIDACAO_FILTRO_OBRIGATORIO = "msg.validacao.filtro.obrigatorio";
 }

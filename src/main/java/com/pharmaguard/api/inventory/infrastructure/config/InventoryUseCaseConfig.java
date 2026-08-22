@@ -1,17 +1,29 @@
 package com.pharmaguard.api.inventory.infrastructure.config;
 
 import com.pharmaguard.api.inventory.adapters.out.repository.CategoriaJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryEntradaEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryCategoriaRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryHistoricoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryInventoryStore;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryLoteRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryMedicamentoRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaidaEstoqueRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaldoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
 import com.pharmaguard.api.inventory.application.CategoriaUseCase;
 import com.pharmaguard.api.inventory.application.CategoriaUseCaseImpl;
+import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCase;
+import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCaseImpl;
+import com.pharmaguard.api.inventory.application.HistoricoEstoqueUseCase;
+import com.pharmaguard.api.inventory.application.HistoricoEstoqueUseCaseImpl;
 import com.pharmaguard.api.inventory.application.LoteUseCase;
 import com.pharmaguard.api.inventory.application.LoteUseCaseImpl;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCase;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCaseImpl;
+import com.pharmaguard.api.inventory.application.SaidaEstoqueUseCase;
+import com.pharmaguard.api.inventory.application.SaidaEstoqueUseCaseImpl;
+import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCase;
+import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCaseImpl;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCase;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCaseImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -52,6 +64,34 @@ public class InventoryUseCaseConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    public EntradaEstoqueUseCase.EntradaEstoqueRepositoryPort inMemoryEntradaEstoqueRepositoryPort(
+            InMemoryInventoryStore store) {
+        return new InMemoryEntradaEstoqueRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    public SaidaEstoqueUseCase.SaidaEstoqueRepositoryPort inMemorySaidaEstoqueRepositoryPort(
+            InMemoryInventoryStore store) {
+        return new InMemorySaidaEstoqueRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    public SaldoEstoqueUseCase.SaldoEstoqueRepositoryPort inMemorySaldoEstoqueRepositoryPort(
+            InMemoryInventoryStore store) {
+        return new InMemorySaldoEstoqueRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    public HistoricoEstoqueUseCase.HistoricoEstoqueRepositoryPort inMemoryHistoricoEstoqueRepositoryPort(
+            InMemoryInventoryStore store) {
+        return new InMemoryHistoricoEstoqueRepositoryAdapter(store);
+    }
+
+    @Bean
     public CategoriaUseCase categoriaUseCase(CategoriaUseCase.CategoriaRepositoryPort repository) {
         return new CategoriaUseCaseImpl(repository);
     }
@@ -69,5 +109,29 @@ public class InventoryUseCaseConfig {
     @Bean
     public LoteUseCase loteUseCase(LoteUseCase.LoteRepositoryPort repository) {
         return new LoteUseCaseImpl(repository);
+    }
+
+    @Bean
+    public EntradaEstoqueUseCase entradaEstoqueUseCase(
+            EntradaEstoqueUseCase.EntradaEstoqueRepositoryPort repository) {
+        return new EntradaEstoqueUseCaseImpl(repository);
+    }
+
+    @Bean
+    public SaidaEstoqueUseCase saidaEstoqueUseCase(
+            SaidaEstoqueUseCase.SaidaEstoqueRepositoryPort repository) {
+        return new SaidaEstoqueUseCaseImpl(repository);
+    }
+
+    @Bean
+    public SaldoEstoqueUseCase saldoEstoqueUseCase(
+            SaldoEstoqueUseCase.SaldoEstoqueRepositoryPort repository) {
+        return new SaldoEstoqueUseCaseImpl(repository);
+    }
+
+    @Bean
+    public HistoricoEstoqueUseCase historicoEstoqueUseCase(
+            HistoricoEstoqueUseCase.HistoricoEstoqueRepositoryPort repository) {
+        return new HistoricoEstoqueUseCaseImpl(repository);
     }
 }
