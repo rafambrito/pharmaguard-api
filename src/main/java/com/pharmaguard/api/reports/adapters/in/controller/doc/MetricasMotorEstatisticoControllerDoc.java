@@ -25,5 +25,6 @@ public interface MetricasMotorEstatisticoControllerDoc {
             @Parameter(description = "Filtro por medicamento") Long medicamentoId,
             @Parameter(description = "Filtro por categoria") Long categoriaId,
             @Parameter(description = "Filtro por unidade de medida") Long unidadeMedidaId,
-            @Parameter(description = "Filtro por fornecedor") Long fornecedorId);
+            @Parameter(description = "Filtro por fornecedor") Long fornecedorId,
+            @Parameter(description = "Filtro por unidade de saude") Long unidadeSaudeId);
 }

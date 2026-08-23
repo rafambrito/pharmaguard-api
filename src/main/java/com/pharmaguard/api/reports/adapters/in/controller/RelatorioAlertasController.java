@@ -32,7 +32,8 @@ public class RelatorioAlertasController implements RelatorioAlertasControllerDoc
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
             @RequestParam(required = false) Long unidadeMedidaId,
-            @RequestParam(required = false) Long fornecedorId) {
+            @RequestParam(required = false) Long fornecedorId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
         FiltroAlertas filtro = new FiltroAlertas(
                 periodoInicio,
@@ -40,7 +41,7 @@ public class RelatorioAlertasController implements RelatorioAlertasControllerDoc
                 medicamentoId,
                 categoriaId,
                 unidadeMedidaId,
-                fornecedorId);
+                fornecedorId, unidadeSaudeId);
 
         return ResponseEntity.ok(useCase.gerar(filtro));
     }

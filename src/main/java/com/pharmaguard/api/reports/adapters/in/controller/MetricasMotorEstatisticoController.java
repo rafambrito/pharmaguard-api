@@ -32,7 +32,8 @@ public class MetricasMotorEstatisticoController implements MetricasMotorEstatist
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
             @RequestParam(required = false) Long unidadeMedidaId,
-            @RequestParam(required = false) Long fornecedorId) {
+            @RequestParam(required = false) Long fornecedorId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
         FiltroMetricasMotorEstatistico filtro = new FiltroMetricasMotorEstatistico(
                 periodoInicio,
@@ -40,7 +41,7 @@ public class MetricasMotorEstatisticoController implements MetricasMotorEstatist
                 medicamentoId,
                 categoriaId,
                 unidadeMedidaId,
-                fornecedorId);
+                fornecedorId, unidadeSaudeId);
 
         return ResponseEntity.ok(useCase.consultar(filtro));
     }

@@ -8,5 +8,10 @@ public record FiltroAlertas(
         Long medicamentoId,
         Long categoriaId,
         Long unidadeMedidaId,
-        Long fornecedorId) {
+                Long fornecedorId,
+                Long unidadeSaudeId) {
+        public FiltroAlertas(LocalDate inicio, LocalDate fim, Long medicamentoId, Long categoriaId,
+                        Long unidadeMedidaId, Long fornecedorId) {
+                this(inicio, fim, medicamentoId, categoriaId, unidadeMedidaId, fornecedorId, null);
+        }
 }

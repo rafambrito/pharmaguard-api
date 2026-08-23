@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public record MovimentacaoEstoqueResponse(
         Long id,
         MovimentacaoEstoque.Tipo tipo,
+        Long unidadeId,
         Long medicamentoId,
         Long loteId,
         Integer quantidade,

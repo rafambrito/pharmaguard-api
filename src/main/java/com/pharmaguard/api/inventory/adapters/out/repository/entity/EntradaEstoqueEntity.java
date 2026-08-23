@@ -31,6 +31,10 @@ public class EntradaEstoqueEntity {
     @JoinColumn(name = "lote_id", nullable = false)
     private LoteEntity lote;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unidade_saude_id", nullable = false)
+    private UnidadeSaudeEntity unidadeSaude;
+
     @Column(name = "quantidade", nullable = false)
     private int quantidade;
 
@@ -58,6 +62,9 @@ public class EntradaEstoqueEntity {
 
     public LoteEntity getLote() { return lote; }
     public void setLote(LoteEntity lote) { this.lote = lote; }
+
+    public UnidadeSaudeEntity getUnidadeSaude() { return unidadeSaude; }
+    public void setUnidadeSaude(UnidadeSaudeEntity unidadeSaude) { this.unidadeSaude = unidadeSaude; }
 
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }

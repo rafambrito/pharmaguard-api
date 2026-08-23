@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public record EntradaEstoqueResponse(
         Long id,
+        Long unidadeId,
         Long medicamentoId,
         Long loteId,
         Integer quantidade,

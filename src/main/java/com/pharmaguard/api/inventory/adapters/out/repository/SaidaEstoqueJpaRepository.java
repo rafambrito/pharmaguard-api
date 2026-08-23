@@ -8,4 +8,7 @@ import java.util.List;
 public interface SaidaEstoqueJpaRepository extends JpaRepository<SaidaEstoqueEntity, Long> {
 
     List<SaidaEstoqueEntity> findAllByMedicamento_IdOrderByDataSaidaDesc(Long medicamentoId);
+
+    List<SaidaEstoqueEntity> findAllByMedicamento_IdAndUnidadeSaude_IdOrderByDataSaidaDesc(
+            Long medicamentoId, Long unidadeId);
 }

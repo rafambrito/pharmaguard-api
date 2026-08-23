@@ -33,22 +33,31 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
     private final LoteJpaRepository loteJpa;
     private final SaldoLoteEstoqueJpaRepository saldoLoteJpa;
     private final MovimentacaoEstoqueJpaRepository movimentacaoJpa;
+    private final UnidadeSaudeJpaRepository unidadeSaudeJpa;
 
     public SaidaEstoqueJpaAdapter(SaidaEstoqueJpaRepository saidaJpa,
             MedicamentoJpaRepository medicamentoJpa,
             LoteJpaRepository loteJpa,
             SaldoLoteEstoqueJpaRepository saldoLoteJpa,
-            MovimentacaoEstoqueJpaRepository movimentacaoJpa) {
+            MovimentacaoEstoqueJpaRepository movimentacaoJpa,
+            UnidadeSaudeJpaRepository unidadeSaudeJpa) {
         this.saidaJpa = saidaJpa;
         this.medicamentoJpa = medicamentoJpa;
         this.loteJpa = loteJpa;
         this.saldoLoteJpa = saldoLoteJpa;
         this.movimentacaoJpa = movimentacaoJpa;
+        this.unidadeSaudeJpa = unidadeSaudeJpa;
     }
 
     @Override
     public SaidaEstoque salvar(SaidaEstoque saida) {
         return toDomain(saidaJpa.save(toEntity(saida)));
+    }
+
+    @Override
+    public boolean unidadeAtiva(Long unidadeId) {
+        return unidadeSaudeJpa.existsByIdAndStatus(unidadeId,
+                com.pharmaguard.api.inventory.domain.UnidadeSaude.Status.ATIVA);
     }
 
     @Override
@@ -68,28 +77,44 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
     }
 
     @Override
+    public List<SaidaEstoque> listar(Long unidadeId, Long medicamentoId) {
+        return saidaJpa.findAllByMedicamento_IdAndUnidadeSaude_IdOrderByDataSaidaDesc(medicamentoId, unidadeId)
+                .stream().map(this::toDomain).toList();
+    }
+
+    @Override
     public Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId) {
         return medicamentoJpa.findById(medicamentoId).map(this::medicamentoToDomain);
     }
 
     @Override
     public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long medicamentoId) {
+        return listarSaldosPorMedicamento(0L, medicamentoId);
+        }
+
+        @Override
+        public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long unidadeId, Long medicamentoId) {
         return loteJpa.findAllByMedicamento_Id(medicamentoId).stream()
                 .map(lote -> new SaldoLoteEstoque(
                         lote.getId(),
                         lote.getNumeroLote(),
                         lote.getDataValidade(),
-                        saldoAtualDoLote(lote)))
+                        saldoAtualDoLote(unidadeId, lote)))
                 .toList();
     }
 
     @Override
     public int baixarSaldoLote(Long loteId, int quantidade) {
+        return baixarSaldoLote(0L, loteId, quantidade);
+    }
+
+    @Override
+    public int baixarSaldoLote(Long unidadeId, Long loteId, int quantidade) {
         LoteEntity lote = loteJpa.findById(loteId)
                 .orElseThrow(() -> new IllegalArgumentException("lote nao encontrado para atualizar saldo"));
 
-        SaldoLoteEstoqueEntity saldo = saldoLoteJpa.findById(loteId)
-                .orElseGet(() -> criarSaldoInicial(lote));
+        SaldoLoteEstoqueEntity saldo = saldoLoteJpa.findById(new com.pharmaguard.api.inventory.adapters.out.repository.entity.SaldoLoteEstoqueId(loteId, unidadeId))
+            .orElseGet(() -> criarSaldoInicial(lote, unidadeId));
 
         int novoSaldo = saldo.getQuantidadeDisponivel() - quantidade;
         if (novoSaldo < 0) {
@@ -106,24 +131,26 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
         return movimentacaoToDomain(movimentacaoJpa.save(movimentacaoToEntity(movimentacao)));
     }
 
-    private SaldoLoteEstoqueEntity criarSaldoInicial(LoteEntity lote) {
+    private SaldoLoteEstoqueEntity criarSaldoInicial(LoteEntity lote, Long unidadeId) {
         SaldoLoteEstoqueEntity saldo = new SaldoLoteEstoqueEntity();
         saldo.setLote(lote);
+        saldo.setUnidadeSaudeId(unidadeId);
         saldo.setQuantidadeDisponivel(lote.getQuantidadeInicial());
         saldo.setDataUltimaMovimentacao(LocalDateTime.now());
         return saldo;
     }
 
-    private int saldoAtualDoLote(LoteEntity lote) {
-        return saldoLoteJpa.findById(lote.getId())
+    private int saldoAtualDoLote(Long unidadeId, LoteEntity lote) {
+        return saldoLoteJpa.findById(new com.pharmaguard.api.inventory.adapters.out.repository.entity.SaldoLoteEstoqueId(lote.getId(), unidadeId))
                 .map(SaldoLoteEstoqueEntity::getQuantidadeDisponivel)
-                .orElse(lote.getQuantidadeInicial());
+                .orElse(0);
     }
 
     private SaidaEstoqueEntity toEntity(SaidaEstoque saida) {
         SaidaEstoqueEntity entity = new SaidaEstoqueEntity();
         entity.setId(saida.getId());
         entity.setMedicamento(medicamentoJpa.getReferenceById(saida.getMedicamento().getId()));
+        entity.setUnidadeSaude(unidadeSaudeJpa.getReferenceById(saida.getUnidadeSaude().getId()));
         entity.setQuantidadeTotal(saida.getQuantidadeTotal());
         entity.setDataSaida(Objects.requireNonNullElseGet(saida.getDataSaida(), LocalDateTime::now));
         entity.setMotivo(saida.getMotivo());
@@ -147,6 +174,7 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
         SaidaEstoque saida = new SaidaEstoque();
         saida.setId(entity.getId());
         saida.setMedicamento(medicamentoToDomain(entity.getMedicamento()));
+        saida.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         saida.setQuantidadeTotal(entity.getQuantidadeTotal());
         saida.setDataSaida(entity.getDataSaida());
         saida.setMotivo(entity.getMotivo());
@@ -177,6 +205,7 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
         entity.setSaldoAposMovimentacao(movimentacao.getSaldoAposMovimentacao());
         entity.setDataMovimentacao(Objects.requireNonNullElseGet(movimentacao.getDataMovimentacao(), LocalDateTime::now));
         entity.setMotivo(movimentacao.getMotivo());
+        entity.setUnidadeSaude(unidadeSaudeJpa.getReferenceById(movimentacao.getUnidadeSaude().getId()));
         entity.setUsuarioResponsavelId(movimentacao.getUsuarioResponsavelId());
         return entity;
     }
@@ -193,6 +222,7 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
         movimentacao.setSaldoAposMovimentacao(entity.getSaldoAposMovimentacao());
         movimentacao.setDataMovimentacao(entity.getDataMovimentacao());
         movimentacao.setMotivo(entity.getMotivo());
+        movimentacao.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         movimentacao.setUsuarioResponsavelId(entity.getUsuarioResponsavelId());
         return movimentacao;
     }

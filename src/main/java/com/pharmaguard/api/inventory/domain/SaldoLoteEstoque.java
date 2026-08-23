@@ -6,6 +6,7 @@ public class SaldoLoteEstoque {
 
     private Long loteId;
     private Long medicamentoId;
+    private UnidadeSaude unidadeSaude;
     private String numeroLote;
     private LocalDate dataValidade;
     private int quantidadeDisponivel;
@@ -32,6 +33,14 @@ public class SaldoLoteEstoque {
 
     public void setMedicamentoId(Long medicamentoId) {
         this.medicamentoId = medicamentoId;
+    }
+
+    public UnidadeSaude getUnidadeSaude() {
+        return unidadeSaude;
+    }
+
+    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
+        this.unidadeSaude = unidadeSaude;
     }
 
     public Long getLoteId() {

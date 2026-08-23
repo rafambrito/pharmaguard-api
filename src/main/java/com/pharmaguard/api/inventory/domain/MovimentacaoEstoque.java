@@ -15,6 +15,7 @@ public class MovimentacaoEstoque {
     private Tipo tipo;
     private Medicamento medicamento;
     private Lote lote;
+    private UnidadeSaude unidadeSaude;
     private int quantidade;
     private int saldoAposMovimentacao;
     private LocalDateTime dataMovimentacao;
@@ -59,6 +60,14 @@ public class MovimentacaoEstoque {
 
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = Objects.requireNonNull(medicamento, "medicamento e obrigatorio");
+    }
+
+    public UnidadeSaude getUnidadeSaude() {
+        return unidadeSaude;
+    }
+
+    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
+        this.unidadeSaude = Objects.requireNonNull(unidadeSaude, "unidade de saude e obrigatoria");
     }
 
     public Lote getLote() {

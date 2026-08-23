@@ -35,5 +35,7 @@ public interface RelatorioReposicaoControllerDoc {
             @Parameter(description = "Filtro por unidade de medida")
             @RequestParam(required = false) Long unidadeMedidaId,
             @Parameter(description = "Filtro por fornecedor")
-            @RequestParam(required = false) Long fornecedorId);
+            @RequestParam(required = false) Long fornecedorId,
+            @Parameter(description = "Filtro por unidade de saude")
+            @RequestParam(required = false) Long unidadeSaudeId);
 }

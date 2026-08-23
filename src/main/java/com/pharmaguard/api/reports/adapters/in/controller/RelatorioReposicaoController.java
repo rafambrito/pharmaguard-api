@@ -32,9 +32,10 @@ public class RelatorioReposicaoController implements RelatorioReposicaoControlle
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
             @RequestParam(required = false) Long unidadeMedidaId,
-            @RequestParam(required = false) Long fornecedorId) {
+            @RequestParam(required = false) Long fornecedorId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
-        FiltroReposicao filtro = new FiltroReposicao(periodoInicio, periodoFim, medicamentoId, categoriaId, unidadeMedidaId, fornecedorId);
+        FiltroReposicao filtro = new FiltroReposicao(periodoInicio, periodoFim, medicamentoId, categoriaId, unidadeMedidaId, fornecedorId, unidadeSaudeId);
         return ResponseEntity.ok(useCase.gerar(filtro));
     }
 }

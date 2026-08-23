@@ -32,6 +32,16 @@ public class HistoricoEstoqueUseCaseImpl implements HistoricoEstoqueUseCase {
         return repository.listar(medicamentoId, loteId, tipo, dataInicial, dataFinal);
     }
 
+    @Override
+    public List<MovimentacaoEstoque> listar(Long unidadeId, Long medicamentoId, Long loteId,
+            MovimentacaoEstoque.Tipo tipo, LocalDate dataInicial, LocalDate dataFinal) {
+        if (unidadeId == null || unidadeId <= 0) {
+            throw new IllegalArgumentException("unidadeId deve ser maior que zero");
+        }
+        validarIntervaloDatas(dataInicial, dataFinal);
+        return repository.listarPorUnidade(unidadeId, medicamentoId, loteId, tipo, dataInicial, dataFinal);
+    }
+
     private void validarIntervaloDatas(LocalDate dataInicial, LocalDate dataFinal) {
         if (dataInicial != null && dataFinal != null && dataInicial.isAfter(dataFinal)) {
             throw new IllegalArgumentException("dataInicial nao pode ser maior que dataFinal");

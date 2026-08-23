@@ -15,6 +15,7 @@ public class EntradaEstoque {
     private Long id;
     private Medicamento medicamento;
     private Lote lote;
+    private UnidadeSaude unidadeSaude;
     private int quantidade;
     private LocalDateTime dataEntrada;
     private Origem origem;
@@ -60,6 +61,14 @@ public class EntradaEstoque {
 
     public void setLote(Lote lote) {
         this.lote = Objects.requireNonNull(lote, "lote e obrigatorio");
+    }
+
+    public UnidadeSaude getUnidadeSaude() {
+        return unidadeSaude;
+    }
+
+    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
+        this.unidadeSaude = Objects.requireNonNull(unidadeSaude, "unidade de saude e obrigatoria");
     }
 
     public int getQuantidade() {

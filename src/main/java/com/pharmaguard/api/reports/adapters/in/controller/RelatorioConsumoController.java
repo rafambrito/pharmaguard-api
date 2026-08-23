@@ -32,7 +32,8 @@ public class RelatorioConsumoController implements RelatorioConsumoControllerDoc
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
             @RequestParam(required = false) Long unidadeMedidaId,
-            @RequestParam(required = false) Long fornecedorId) {
+            @RequestParam(required = false) Long fornecedorId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
         return ResponseEntity.ok(useCase.gerar(new FiltroConsumo(
                 periodoInicio,
@@ -40,6 +41,6 @@ public class RelatorioConsumoController implements RelatorioConsumoControllerDoc
                 medicamentoId,
                 categoriaId,
                 unidadeMedidaId,
-                fornecedorId)));
+                fornecedorId, unidadeSaudeId)));
     }
 }

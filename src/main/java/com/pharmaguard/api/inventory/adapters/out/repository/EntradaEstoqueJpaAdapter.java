@@ -31,22 +31,31 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
     private final LoteJpaRepository loteJpa;
     private final SaldoLoteEstoqueJpaRepository saldoLoteJpa;
     private final MovimentacaoEstoqueJpaRepository movimentacaoJpa;
+    private final UnidadeSaudeJpaRepository unidadeSaudeJpa;
 
     public EntradaEstoqueJpaAdapter(EntradaEstoqueJpaRepository entradaJpa,
             MedicamentoJpaRepository medicamentoJpa,
             LoteJpaRepository loteJpa,
             SaldoLoteEstoqueJpaRepository saldoLoteJpa,
-            MovimentacaoEstoqueJpaRepository movimentacaoJpa) {
+            MovimentacaoEstoqueJpaRepository movimentacaoJpa,
+            UnidadeSaudeJpaRepository unidadeSaudeJpa) {
         this.entradaJpa = entradaJpa;
         this.medicamentoJpa = medicamentoJpa;
         this.loteJpa = loteJpa;
         this.saldoLoteJpa = saldoLoteJpa;
         this.movimentacaoJpa = movimentacaoJpa;
+        this.unidadeSaudeJpa = unidadeSaudeJpa;
     }
 
     @Override
     public EntradaEstoque salvar(EntradaEstoque entrada) {
         return toDomain(entradaJpa.save(toEntity(entrada)));
+    }
+
+    @Override
+    public boolean unidadeAtiva(Long unidadeId) {
+        return unidadeSaudeJpa.existsByIdAndStatus(unidadeId,
+                com.pharmaguard.api.inventory.domain.UnidadeSaude.Status.ATIVA);
     }
 
     @Override
@@ -56,7 +65,12 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
 
     @Override
     public List<EntradaEstoque> listar(Long medicamentoId, Long loteId) {
-        return entradaJpa.findByFiltros(medicamentoId, loteId).stream().map(this::toDomain).toList();
+        return entradaJpa.findByFiltros(medicamentoId, loteId, null).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public List<EntradaEstoque> listarPorUnidade(Long unidadeId, Long medicamentoId, Long loteId) {
+        return entradaJpa.findByFiltros(medicamentoId, loteId, unidadeId).stream().map(this::toDomain).toList();
     }
 
     @Override
@@ -71,11 +85,16 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
 
     @Override
     public int creditarSaldoLote(Long loteId, int quantidade) {
+        return creditarSaldoLote(0L, loteId, quantidade);
+    }
+
+    @Override
+    public int creditarSaldoLote(Long unidadeId, Long loteId, int quantidade) {
         LoteEntity lote = loteJpa.findById(loteId)
                 .orElseThrow(() -> new IllegalArgumentException("lote nao encontrado para atualizar saldo"));
 
-        SaldoLoteEstoqueEntity saldo = saldoLoteJpa.findById(loteId)
-                .orElseGet(() -> criarSaldoInicial(lote));
+        SaldoLoteEstoqueEntity saldo = saldoLoteJpa.findById(new com.pharmaguard.api.inventory.adapters.out.repository.entity.SaldoLoteEstoqueId(loteId, unidadeId))
+            .orElseGet(() -> criarSaldoInicial(lote, unidadeId));
 
         saldo.setQuantidadeDisponivel(saldo.getQuantidadeDisponivel() + quantidade);
         saldo.setDataUltimaMovimentacao(LocalDateTime.now());
@@ -87,9 +106,10 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
         return movimentacaoToDomain(movimentacaoJpa.save(movimentacaoToEntity(movimentacao)));
     }
 
-    private SaldoLoteEstoqueEntity criarSaldoInicial(LoteEntity lote) {
+    private SaldoLoteEstoqueEntity criarSaldoInicial(LoteEntity lote, Long unidadeId) {
         SaldoLoteEstoqueEntity saldo = new SaldoLoteEstoqueEntity();
         saldo.setLote(lote);
+        saldo.setUnidadeSaudeId(unidadeId);
         saldo.setQuantidadeDisponivel(lote.getQuantidadeInicial());
         saldo.setDataUltimaMovimentacao(LocalDateTime.now());
         return saldo;
@@ -100,6 +120,7 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
         entity.setId(entrada.getId());
         entity.setMedicamento(medicamentoJpa.getReferenceById(entrada.getMedicamento().getId()));
         entity.setLote(loteJpa.getReferenceById(entrada.getLote().getId()));
+        entity.setUnidadeSaude(unidadeSaudeJpa.getReferenceById(entrada.getUnidadeSaude().getId()));
         entity.setQuantidade(entrada.getQuantidade());
         entity.setDataEntrada(Objects.requireNonNullElseGet(entrada.getDataEntrada(), LocalDateTime::now));
         entity.setOrigem(entrada.getOrigem());
@@ -114,6 +135,7 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
         entrada.setId(entity.getId());
         entrada.setMedicamento(medicamentoToDomain(entity.getMedicamento()));
         entrada.setLote(loteToDomain(entity.getLote()));
+        entrada.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         entrada.setQuantidade(entity.getQuantidade());
         entrada.setDataEntrada(entity.getDataEntrada());
         entrada.setOrigem(entity.getOrigem());
@@ -131,6 +153,7 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
         if (movimentacao.getLote() != null && movimentacao.getLote().getId() != null) {
             entity.setLote(loteJpa.getReferenceById(movimentacao.getLote().getId()));
         }
+        entity.setUnidadeSaude(unidadeSaudeJpa.getReferenceById(movimentacao.getUnidadeSaude().getId()));
         entity.setQuantidade(movimentacao.getQuantidade());
         entity.setSaldoAposMovimentacao(movimentacao.getSaldoAposMovimentacao());
         entity.setDataMovimentacao(Objects.requireNonNullElseGet(movimentacao.getDataMovimentacao(), LocalDateTime::now));
@@ -147,6 +170,7 @@ public class EntradaEstoqueJpaAdapter implements EntradaEstoqueRepositoryPort {
         if (entity.getLote() != null) {
             movimentacao.setLote(loteToDomain(entity.getLote()));
         }
+            movimentacao.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         movimentacao.setQuantidade(entity.getQuantidade());
         movimentacao.setSaldoAposMovimentacao(entity.getSaldoAposMovimentacao());
         movimentacao.setDataMovimentacao(entity.getDataMovimentacao());

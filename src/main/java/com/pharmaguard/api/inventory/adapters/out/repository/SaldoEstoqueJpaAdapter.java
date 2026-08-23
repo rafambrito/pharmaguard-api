@@ -17,19 +17,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@ConditionalOnBean(SaldoLoteEstoqueJpaRepository.class)
+@ConditionalOnBean({SaldoLoteEstoqueJpaRepository.class, UnidadeSaudeJpaRepository.class})
 public class SaldoEstoqueJpaAdapter implements SaldoEstoqueRepositoryPort {
 
     private final MedicamentoJpaRepository medicamentoJpa;
     private final LoteJpaRepository loteJpa;
     private final SaldoLoteEstoqueJpaRepository saldoLoteJpa;
+    private final UnidadeSaudeJpaRepository unidadeSaudeJpa;
 
     public SaldoEstoqueJpaAdapter(MedicamentoJpaRepository medicamentoJpa,
             LoteJpaRepository loteJpa,
-            SaldoLoteEstoqueJpaRepository saldoLoteJpa) {
+            SaldoLoteEstoqueJpaRepository saldoLoteJpa,
+            UnidadeSaudeJpaRepository unidadeSaudeJpa) {
         this.medicamentoJpa = medicamentoJpa;
         this.loteJpa = loteJpa;
         this.saldoLoteJpa = saldoLoteJpa;
+        this.unidadeSaudeJpa = unidadeSaudeJpa;
     }
 
     @Override
@@ -38,16 +41,27 @@ public class SaldoEstoqueJpaAdapter implements SaldoEstoqueRepositoryPort {
     }
 
     @Override
+    public boolean unidadeAtiva(Long unidadeId) {
+        return unidadeSaudeJpa.existsByIdAndStatus(unidadeId,
+                com.pharmaguard.api.inventory.domain.UnidadeSaude.Status.ATIVA);
+    }
+
+    @Override
     public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long medicamentoId) {
+        return listarSaldosPorMedicamento(0L, medicamentoId);
+    }
+
+    @Override
+    public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long unidadeId, Long medicamentoId) {
         return loteJpa.findAllByMedicamento_Id(medicamentoId).stream()
-                .map(this::saldoLoteToDomain)
+                .map(lote -> saldoLoteToDomain(unidadeId, lote))
                 .toList();
     }
 
     @Override
     public List<SaldoLoteEstoque> listarTodosOsSaldos() {
         return loteJpa.findAll().stream()
-                .map(this::saldoLoteToDomain)
+                .map(lote -> saldoLoteToDomain(0L, lote))
                 .toList();
     }
 
@@ -57,11 +71,17 @@ public class SaldoEstoqueJpaAdapter implements SaldoEstoqueRepositoryPort {
     }
 
     private SaldoLoteEstoque saldoLoteToDomain(LoteEntity lote) {
-        int quantidadeDisponivel = saldoLoteJpa.findById(lote.getId())
+        return saldoLoteToDomain(0L, lote);
+    }
+
+    private SaldoLoteEstoque saldoLoteToDomain(Long unidadeId, LoteEntity lote) {
+        int quantidadeDisponivel = saldoLoteJpa.findById(new com.pharmaguard.api.inventory.adapters.out.repository.entity.SaldoLoteEstoqueId(lote.getId(), unidadeId))
                 .map(SaldoLoteEstoqueEntity::getQuantidadeDisponivel)
-                .orElse(lote.getQuantidadeInicial());
-        return new SaldoLoteEstoque(lote.getMedicamento().getId(), lote.getId(), lote.getNumeroLote(),
+                .orElse(0);
+        SaldoLoteEstoque saldo = new SaldoLoteEstoque(lote.getMedicamento().getId(), lote.getId(), lote.getNumeroLote(),
             lote.getDataValidade(), quantidadeDisponivel);
+        saldo.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(unidadeId));
+        return saldo;
     }
 
     private Medicamento medicamentoToDomain(MedicamentoEntity e) {

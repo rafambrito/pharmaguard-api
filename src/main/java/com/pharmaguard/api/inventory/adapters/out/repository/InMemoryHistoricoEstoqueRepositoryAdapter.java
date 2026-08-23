@@ -33,6 +33,15 @@ public class InMemoryHistoricoEstoqueRepositoryAdapter implements HistoricoEstoq
                 .toList();
     }
 
+            @Override
+            public List<MovimentacaoEstoque> listarPorUnidade(Long unidadeId, Long medicamentoId, Long loteId,
+                MovimentacaoEstoque.Tipo tipo, LocalDate dataInicial, LocalDate dataFinal) {
+            return listar(medicamentoId, loteId, tipo, dataInicial, dataFinal).stream()
+                .filter(movimentacao -> movimentacao.getUnidadeSaude() != null
+                    && unidadeId.equals(movimentacao.getUnidadeSaude().getId()))
+                .toList();
+            }
+
     @Override
     public Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId) {
         return Optional.ofNullable(store.medicamentos.get(medicamentoId));

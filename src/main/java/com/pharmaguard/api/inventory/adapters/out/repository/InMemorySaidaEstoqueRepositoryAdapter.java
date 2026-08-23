@@ -39,31 +39,59 @@ public class InMemorySaidaEstoqueRepositoryAdapter implements SaidaEstoqueReposi
                 .toList();
     }
 
+            @Override
+            public List<SaidaEstoque> listar(Long unidadeId, Long medicamentoId) {
+            return listar(medicamentoId).stream()
+                .filter(saida -> saida.getUnidadeSaude() != null
+                    && unidadeId.equals(saida.getUnidadeSaude().getId()))
+                .toList();
+            }
+
     @Override
     public Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId) {
         return Optional.ofNullable(store.medicamentos.get(medicamentoId));
     }
 
     @Override
+    public boolean unidadeAtiva(Long unidadeId) {
+        return store.unidadesSaude.containsKey(unidadeId)
+                && store.unidadesSaude.get(unidadeId).getStatus() == com.pharmaguard.api.inventory.domain.UnidadeSaude.Status.ATIVA;
+    }
+
+    @Override
     public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long medicamentoId) {
+        return listarSaldosPorMedicamento(0L, medicamentoId);
+    }
+
+    @Override
+    public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long unidadeId, Long medicamentoId) {
         return store.lotes.values().stream()
                 .filter(lote -> medicamentoId.equals(lote.getMedicamento().getId()))
-                .map(lote -> new SaldoLoteEstoque(
+                .map(lote -> {
+                    SaldoLoteEstoque saldo = new SaldoLoteEstoque(
                         lote.getId(),
                         lote.getNumeroLote(),
                         lote.getDataValidade(),
-                        saldoAtualDoLote(lote.getId())))
+                        saldoAtualDoLote(unidadeId, lote.getId()));
+                    saldo.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(unidadeId));
+                    return saldo;
+                })
                 .toList();
     }
 
     @Override
     public int baixarSaldoLote(Long loteId, int quantidade) {
-        int saldoAtual = saldoAtualDoLote(loteId);
+        return baixarSaldoLote(0L, loteId, quantidade);
+    }
+
+    @Override
+    public int baixarSaldoLote(Long unidadeId, Long loteId, int quantidade) {
+        int saldoAtual = saldoAtualDoLote(unidadeId, loteId);
         int novoSaldo = saldoAtual - quantidade;
         if (novoSaldo < 0) {
             throw new IllegalArgumentException("saldo insuficiente no lote informado");
         }
-        store.saldosPorLote.put(loteId, novoSaldo);
+        store.saldosPorLote.put(chaveSaldo(unidadeId, loteId), novoSaldo);
         return novoSaldo;
     }
 
@@ -76,8 +104,8 @@ public class InMemorySaidaEstoqueRepositoryAdapter implements SaidaEstoqueReposi
         return movimentacao;
     }
 
-    private int saldoAtualDoLote(Long loteId) {
-        Integer saldoPersistido = store.saldosPorLote.get(loteId);
+    private int saldoAtualDoLote(Long unidadeId, Long loteId) {
+        Integer saldoPersistido = store.saldosPorLote.get(chaveSaldo(unidadeId, loteId));
         if (saldoPersistido != null) {
             return saldoPersistido;
         }
@@ -85,6 +113,10 @@ public class InMemorySaidaEstoqueRepositoryAdapter implements SaidaEstoqueReposi
         if (lote == null) {
             throw new IllegalArgumentException("lote nao encontrado para atualizar saldo");
         }
-        return lote.getQuantidadeInicial();
+        return 0;
+    }
+
+    private String chaveSaldo(Long unidadeId, Long loteId) {
+        return unidadeId + ":" + loteId;
     }
 }

@@ -139,6 +139,7 @@ public class InventoryAdapterInMapper {
 
     public EntradaEstoque toDomain(RegistrarEntradaRequest request) {
         EntradaEstoque entrada = new EntradaEstoque();
+        entrada.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(request.unidadeId()));
         entrada.setQuantidade(request.quantidade());
         entrada.setOrigem(request.origem());
         entrada.setDocumento(request.documento());
@@ -149,6 +150,7 @@ public class InventoryAdapterInMapper {
     public EntradaEstoqueResponse toResponse(EntradaEstoque entrada) {
         return new EntradaEstoqueResponse(
                 entrada.getId(),
+            entrada.getUnidadeSaude() == null ? null : entrada.getUnidadeSaude().getId(),
                 entrada.getMedicamento().getId(),
                 entrada.getLote().getId(),
                 entrada.getQuantidade(),
@@ -161,6 +163,7 @@ public class InventoryAdapterInMapper {
 
     public SaidaEstoque toDomain(RegistrarSaidaRequest request) {
         SaidaEstoque saida = new SaidaEstoque();
+        saida.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(request.unidadeId()));
         saida.setQuantidadeTotal(request.quantidade());
         saida.setMotivo(request.motivo());
         saida.setObservacao(request.observacao());
@@ -174,6 +177,7 @@ public class InventoryAdapterInMapper {
                 .toList();
         return new SaidaEstoqueResponse(
                 saida.getId(),
+            saida.getUnidadeSaude() == null ? null : saida.getUnidadeSaude().getId(),
                 saida.getMedicamento().getId(),
                 saida.getQuantidadeTotal(),
                 saida.getMotivo(),
@@ -187,6 +191,7 @@ public class InventoryAdapterInMapper {
         return new MovimentacaoEstoqueResponse(
                 movimentacao.getId(),
                 movimentacao.getTipo(),
+                movimentacao.getUnidadeSaude() == null ? null : movimentacao.getUnidadeSaude().getId(),
                 movimentacao.getMedicamento().getId(),
                 movimentacao.getLote() == null ? null : movimentacao.getLote().getId(),
                 movimentacao.getQuantidade(),

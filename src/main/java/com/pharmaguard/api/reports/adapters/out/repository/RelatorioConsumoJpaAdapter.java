@@ -42,7 +42,8 @@ public class RelatorioConsumoJpaAdapter implements RelatorioConsumoUseCase.Relat
                         null,
                         MovimentacaoEstoque.Tipo.SAIDA,
                         inicio,
-                        fim)
+                        fim,
+                        filtro.unidadeSaudeId())
                 .stream()
                 .map(this::toDomain)
                 .toList();
@@ -52,6 +53,7 @@ public class RelatorioConsumoJpaAdapter implements RelatorioConsumoUseCase.Relat
         MovimentacaoEstoque movimentacao = new MovimentacaoEstoque();
         movimentacao.setId(entity.getId());
         movimentacao.setTipo(entity.getTipo());
+        movimentacao.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         movimentacao.setMedicamento(medicamentoToDomain(entity.getMedicamento()));
         if (entity.getLote() != null) {
             movimentacao.setLote(loteToDomain(entity.getLote()));

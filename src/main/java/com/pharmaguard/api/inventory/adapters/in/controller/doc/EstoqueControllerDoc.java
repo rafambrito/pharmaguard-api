@@ -41,7 +41,8 @@ public interface EstoqueControllerDoc {
     })
     ResponseEntity<List<EntradaEstoqueResponse>> listarEntradas(
             @Parameter(description = "Id do medicamento") Long medicamentoId,
-            @Parameter(description = "Id do lote") Long loteId);
+            @Parameter(description = "Id do lote") Long loteId,
+            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
 
     @Operation(summary = "Buscar entrada por id")
     @ApiResponses(value = {
@@ -63,7 +64,8 @@ public interface EstoqueControllerDoc {
 
     @Operation(summary = "Listar saidas de estoque")
     ResponseEntity<List<SaidaEstoqueResponse>> listarSaidas(
-            @Parameter(description = "Id do medicamento") Long medicamentoId);
+            @Parameter(description = "Id do medicamento") Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude") Long unidadeId);
 
     @Operation(summary = "Buscar saida por id")
     @ApiResponses(value = {
@@ -79,7 +81,8 @@ public interface EstoqueControllerDoc {
             @Parameter(description = "Id do lote") Long loteId,
             @Parameter(description = "Tipo da movimentacao") MovimentacaoEstoque.Tipo tipo,
             @Parameter(description = "Data inicial") LocalDate dataInicial,
-            @Parameter(description = "Data final") LocalDate dataFinal);
+            @Parameter(description = "Data final") LocalDate dataFinal,
+            @Parameter(description = "Id da unidade de saude") Long unidadeId);
 
     @Operation(summary = "Consultar saldo por medicamento")
     @ApiResponses(value = {
@@ -87,11 +90,13 @@ public interface EstoqueControllerDoc {
             @ApiResponse(responseCode = "404", description = "Medicamento nao encontrado")
     })
     ResponseEntity<SaldoEstoqueResponse> consultarSaldo(
-            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId);
+            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
 
     @Operation(summary = "Consultar saldo por lote do medicamento")
     ResponseEntity<List<SaldoLoteResponse>> consultarSaldoPorLote(
-            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId);
+            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
 
     @Operation(summary = "Listar lotes vencidos e proximos do vencimento")
     ResponseEntity<List<LoteVencimentoResponse>> listarVencimentos(

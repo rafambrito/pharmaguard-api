@@ -125,77 +125,77 @@ A execução deve:
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.0 | Definir escopo do módulo Scheduler no MVP | documentação do módulo e limites de responsabilidade | Planejado |
-| T7.0.1 | Alinhar o scheduler ao roadmap do projeto | referência clara ao posicionamento entre inteligência e relatórios | Planejado |
-| T7.0.2 | Validar dependências com inventory e analytics | mapa de integração do módulo | Planejado |
+| T7.0 | Definir escopo do módulo Scheduler no MVP | documentação do módulo e limites de responsabilidade | ✅ Concluído |
+| T7.0.1 | Alinhar o scheduler ao roadmap do projeto | referência clara ao posicionamento entre inteligência e relatórios | ✅ Concluído |
+| T7.0.2 | Validar dependências com inventory e analytics | mapa de integração do módulo | ✅ Concluído |
 
 ### T1 - Estrutura do módulo
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.1 | Criar estrutura do módulo scheduler | packages application/adapters/out/domain | Planejado |
-| T7.1.1 | Definir portas de entrada/saída | interfaces de integração com outros módulos | Planejado |
-| T7.1.2 | Definir configuração de agendamento | beans e cron de execução | Planejado |
+| T7.1 | Criar estrutura do módulo scheduler | packages application/adapters/out/domain | ✅ Concluído |
+| T7.1.1 | Definir portas de entrada/saída | interfaces de integração com outros módulos | ✅ Concluído |
+| T7.1.2 | Definir configuração de agendamento | beans e cron de execução | ✅ Concluído |
 
 ### T2 - Jobs periódicos
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.2 | Definir job de atualização diária | processo periódico de atualização de indicadores | Planejado |
-| T7.2.1 | Definir job de verificação de validade | análise de vencimento e lotes críticos | Planejado |
-| T7.2.2 | Definir job de análise de consumo/estoque | processamento de risco de ruptura e saldo | Planejado |
+| T7.2 | Definir job de atualização diária | processo periódico de atualização de indicadores | ✅ Concluído |
+| T7.2.1 | Definir job de verificação de validade | análise de vencimento e lotes críticos | ✅ Concluído |
+| T7.2.2 | Definir job de análise de consumo/estoque | processamento de risco de ruptura e saldo | ✅ Concluído |
 
 ### T3 - Integração com motor de inteligência
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.3 | Conectar scheduler ao Inventory Intelligence Engine | integração descrita e organizada por portas | Planejado |
-| T7.3.1 | Orquestrar atualização de recomendações | gatilho de geração de sugestões de reposição | Planejado |
-| T7.3.2 | Definir regras de disparo de alertas | critérios para avisos operacionais | Planejado |
+| T7.3 | Conectar scheduler ao Inventory Intelligence Engine | integração descrita e organizada por portas | ✅ Concluído |
+| T7.3.1 | Orquestrar atualização de recomendações | gatilho de geração de sugestões de reposição | ✅ Concluído |
+| T7.3.2 | Definir regras de disparo de alertas | critérios para avisos operacionais | ✅ Concluído |
 
 ### T4 - Alertas e notificações
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.4 | Definir tipos de alerta do módulo | lista de alertas do MVP | Planejado |
-| T7.4.1 | Definir critérios de severidade | classificação de risco e criticidade | Planejado |
-| T7.4.2 | Definir canal de saída dos alertas | integração com logs, painel ou service de notificação | Planejado |
+| T7.4 | Definir tipos de alerta do módulo | lista de alertas do MVP | ✅ Concluído |
+| T7.4.1 | Definir critérios de severidade | classificação de risco e criticidade | ✅ Concluído |
+| T7.4.2 | Definir canal de saída dos alertas | integração com logs, painel ou service de notificação | ✅ Concluído |
 
 ### T5 - Relatórios e dados consolidados
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.5 | Preparar dados para relatórios periódicos | estrutura de agregação para relatórios | Planejado |
-| T7.5.1 | Definir materialização de indicadores | métricas prontas para relatório | Planejado |
-| T7.5.2 | Garantir compatibilidade com modulo de reports | interface mínima de consumo | Planejado |
+| T7.5 | Preparar dados para relatórios periódicos | estrutura de agregação para relatórios | ✅ Concluído |
+| T7.5.1 | Definir materialização de indicadores | métricas prontas para relatório | ✅ Concluído |
+| T7.5.2 | Garantir compatibilidade com modulo de reports | interface mínima de consumo | ✅ Concluído |
 
 ### T6 - Observabilidade e execução
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.6 | Definir logs de execução do scheduler | registros claros de início, falha e sucesso | Planejado |
-| T7.6.1 | Definir mecanismo de retry/falha | política de recuperação de execução | Planejado |
-| T7.6.2 | Definir auditoria para jobs agendados | rastreabilidade das execuções | Planejado |
+| T7.6 | Definir logs de execução do scheduler | registros claros de início, falha e sucesso | ✅ Concluído |
+| T7.6.1 | Definir mecanismo de retry/falha | política de recuperação de execução | ✅ Concluído |
+| T7.6.2 | Definir auditoria para jobs agendados | rastreabilidade das execuções | ✅ Concluído |
 
 ### T7 - Testes do módulo
 
 | ID | Tarefa | Entregável | Status |
 |---|---|---|---|
-| T7.7 | Criar testes unitários do scheduler | validação de regras de disparo e critérios | Planejado |
-| T7.7.1 | Criar testes de integração do agendamento | execução de jobs e integração com dependências | Planejado |
-| T7.7.2 | Validar comportamento em cenários de falha | retry, log e persistência de erro | Planejado |
+| T7.7 | Criar testes unitários do scheduler | validação de regras de disparo e critérios | ✅ Concluído |
+| T7.7.1 | Criar testes de integração do agendamento | execução de jobs e integração com dependências | ✅ Concluído |
+| T7.7.2 | Validar comportamento em cenários de falha | retry, log e persistência de erro | ✅ Concluído |
 
 ## 8. Critérios de aceite da etapa
 
 | Status | Critério |
 |---|---|
-| Planejado | Módulo Scheduler claramente definido no monólito modular |
-| Planejado | Regras de negócio permanecem em módulos de domínio e aplicação |
-| Planejado | Jobs periódicos definidos e alinhados ao MVP |
-| Planejado | Integração com inventory e analytics documentada |
-| Planejado | Alertas e indicadores do scheduler definidos |
-| Planejado | Testes de execução e falha definidos |
-| Planejado | Escopo do Scheduler mantido dentro do MVP sem dispersão |
+| ✅ Concluído | Módulo Scheduler claramente definido no monólito modular |
+| ✅ Concluído | Regras de negócio permanecem em módulos de domínio e aplicação |
+| ✅ Concluído | Jobs periódicos definidos e alinhados ao MVP |
+| ✅ Concluído | Integração com inventory e analytics documentada |
+| ✅ Concluído | Alertas e indicadores do scheduler definidos |
+| ✅ Concluído | Testes de execução e falha definidos |
+| ✅ Concluído | Escopo do Scheduler mantido dentro do MVP sem dispersão |
 
 ## 9. Observação final
 

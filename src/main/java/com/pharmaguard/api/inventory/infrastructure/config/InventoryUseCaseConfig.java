@@ -10,6 +10,7 @@ import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryMedicamento
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaidaEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaldoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeSaudeRepositoryAdapter;
 import com.pharmaguard.api.inventory.application.CategoriaUseCase;
 import com.pharmaguard.api.inventory.application.CategoriaUseCaseImpl;
 import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCase;
@@ -26,6 +27,8 @@ import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCase;
 import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCaseImpl;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCase;
 import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCaseImpl;
+import com.pharmaguard.api.inventory.application.UnidadeSaudeUseCase;
+import com.pharmaguard.api.inventory.application.UnidadeSaudeUseCaseImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +52,12 @@ public class InventoryUseCaseConfig {
     @ConditionalOnMissingBean(CategoriaJpaRepository.class)
     public UnidadeMedidaUseCase.UnidadeMedidaRepositoryPort inMemoryUnidadeMedidaRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryUnidadeMedidaRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    public UnidadeSaudeUseCase.UnidadeSaudeRepositoryPort inMemoryUnidadeSaudeRepositoryPort(InMemoryInventoryStore store) {
+        return new InMemoryUnidadeSaudeRepositoryAdapter(store);
     }
 
     @Bean
@@ -99,6 +108,11 @@ public class InventoryUseCaseConfig {
     @Bean
     public UnidadeMedidaUseCase unidadeMedidaUseCase(UnidadeMedidaUseCase.UnidadeMedidaRepositoryPort repository) {
         return new UnidadeMedidaUseCaseImpl(repository);
+    }
+
+    @Bean
+    public UnidadeSaudeUseCase unidadeSaudeUseCase(UnidadeSaudeUseCase.UnidadeSaudeRepositoryPort repository) {
+        return new UnidadeSaudeUseCaseImpl(repository);
     }
 
     @Bean

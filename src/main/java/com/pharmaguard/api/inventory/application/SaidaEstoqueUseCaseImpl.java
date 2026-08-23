@@ -31,14 +31,16 @@ public class SaidaEstoqueUseCaseImpl implements SaidaEstoqueUseCase {
     }
 
     @Override
-    public SaidaEstoque registrar(Long medicamentoId, SaidaEstoque saida) {
+    public SaidaEstoque registrar(Long unidadeId, Long medicamentoId, SaidaEstoque saida) {
         Objects.requireNonNull(medicamentoId, "medicamentoId e obrigatorio");
+        validarUnidade(unidadeId);
         Objects.requireNonNull(saida, "saida e obrigatoria");
+        validarUnidadeAtiva(unidadeId);
 
         Medicamento medicamento = repository.buscarMedicamentoPorId(medicamentoId)
                 .orElseThrow(() -> new ResourceNotFoundException("medicamento nao encontrado"));
 
-        List<SaldoLoteEstoque> saldosPorLote = repository.listarSaldosPorMedicamento(medicamentoId);
+        List<SaldoLoteEstoque> saldosPorLote = repository.listarSaldosPorMedicamento(unidadeId, medicamentoId);
         regraSaldoEstoque.validarSaidaComSaldo(saida.getQuantidadeTotal(), saldosPorLote);
 
         List<RegraFefo.ItemBaixaFefo> planoBaixa = regraFefo.planejarBaixa(saida.getQuantidadeTotal(), saldosPorLote);
@@ -47,14 +49,16 @@ public class SaidaEstoqueUseCaseImpl implements SaidaEstoqueUseCase {
         }
 
         saida.setMedicamento(medicamento);
+        saida.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(unidadeId));
         saida.registrarMomentoSaida();
 
         for (RegraFefo.ItemBaixaFefo itemBaixa : planoBaixa) {
-            int saldoAposMovimentacao = repository.baixarSaldoLote(itemBaixa.getLoteId(), itemBaixa.getQuantidadeConsumida());
+            int saldoAposMovimentacao = repository.baixarSaldoLote(unidadeId, itemBaixa.getLoteId(), itemBaixa.getQuantidadeConsumida());
             MovimentacaoEstoque movimentacao = new MovimentacaoEstoque();
             movimentacao.setTipo(MovimentacaoEstoque.Tipo.SAIDA);
             movimentacao.setMedicamento(medicamento);
             movimentacao.setLote(new com.pharmaguard.api.inventory.domain.Lote());
+            movimentacao.setUnidadeSaude(saida.getUnidadeSaude());
             movimentacao.getLote().setId(itemBaixa.getLoteId());
             movimentacao.getLote().setNumeroLote(itemBaixa.getNumeroLote());
             movimentacao.setQuantidade(itemBaixa.getQuantidadeConsumida());
@@ -91,5 +95,24 @@ public class SaidaEstoqueUseCaseImpl implements SaidaEstoqueUseCase {
                     .orElseThrow(() -> new ResourceNotFoundException("medicamento nao encontrado"));
         }
         return repository.listar(medicamentoId);
+    }
+
+    @Override
+    public List<SaidaEstoque> listar(Long unidadeId, Long medicamentoId) {
+        validarUnidade(unidadeId);
+        validarUnidadeAtiva(unidadeId);
+        return repository.listar(unidadeId, medicamentoId);
+    }
+
+    private void validarUnidadeAtiva(Long unidadeId) {
+        if (!repository.unidadeAtiva(unidadeId)) {
+            throw new ResourceNotFoundException("unidade de saude nao encontrada ou inativa");
+        }
+    }
+
+    private void validarUnidade(Long unidadeId) {
+        if (unidadeId == null || unidadeId <= 0) {
+            throw new IllegalArgumentException("unidadeId deve ser maior que zero");
+        }
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public record SaidaEstoqueResponse(
         Long id,
+        Long unidadeId,
         Long medicamentoId,
         Integer quantidadeTotal,
         SaidaEstoque.Motivo motivo,

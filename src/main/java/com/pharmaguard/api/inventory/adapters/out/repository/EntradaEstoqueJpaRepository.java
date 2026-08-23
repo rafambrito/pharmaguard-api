@@ -14,8 +14,9 @@ public interface EntradaEstoqueJpaRepository extends JpaRepository<EntradaEstoqu
             from EntradaEstoqueEntity e
             where (:medicamentoId is null or e.medicamento.id = :medicamentoId)
               and (:loteId is null or e.lote.id = :loteId)
+              and (:unidadeId is null or e.unidadeSaude.id = :unidadeId)
             order by e.dataEntrada desc
             """)
     List<EntradaEstoqueEntity> findByFiltros(@Param("medicamentoId") Long medicamentoId,
-            @Param("loteId") Long loteId);
+            @Param("loteId") Long loteId, @Param("unidadeId") Long unidadeId);
 }

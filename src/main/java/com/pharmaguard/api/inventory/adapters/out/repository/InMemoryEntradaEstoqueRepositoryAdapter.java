@@ -41,9 +41,23 @@ public class InMemoryEntradaEstoqueRepositoryAdapter implements EntradaEstoqueRe
                 .toList();
     }
 
+            @Override
+            public List<EntradaEstoque> listarPorUnidade(Long unidadeId, Long medicamentoId, Long loteId) {
+            return listar(medicamentoId, loteId).stream()
+                .filter(entrada -> entrada.getUnidadeSaude() != null
+                    && unidadeId.equals(entrada.getUnidadeSaude().getId()))
+                .toList();
+            }
+
     @Override
     public Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId) {
         return Optional.ofNullable(store.medicamentos.get(medicamentoId));
+    }
+
+    @Override
+    public boolean unidadeAtiva(Long unidadeId) {
+        return store.unidadesSaude.containsKey(unidadeId)
+                && store.unidadesSaude.get(unidadeId).getStatus() == com.pharmaguard.api.inventory.domain.UnidadeSaude.Status.ATIVA;
     }
 
     @Override
@@ -57,9 +71,14 @@ public class InMemoryEntradaEstoqueRepositoryAdapter implements EntradaEstoqueRe
 
     @Override
     public int creditarSaldoLote(Long loteId, int quantidade) {
-        int saldoAtual = saldoAtualDoLote(loteId);
+        return creditarSaldoLote(0L, loteId, quantidade);
+    }
+
+    @Override
+    public int creditarSaldoLote(Long unidadeId, Long loteId, int quantidade) {
+        int saldoAtual = saldoAtualDoLote(unidadeId, loteId);
         int novoSaldo = saldoAtual + quantidade;
-        store.saldosPorLote.put(loteId, novoSaldo);
+        store.saldosPorLote.put(chaveSaldo(unidadeId, loteId), novoSaldo);
         return novoSaldo;
     }
 
@@ -72,8 +91,8 @@ public class InMemoryEntradaEstoqueRepositoryAdapter implements EntradaEstoqueRe
         return movimentacao;
     }
 
-    private int saldoAtualDoLote(Long loteId) {
-        Integer saldoPersistido = store.saldosPorLote.get(loteId);
+    private int saldoAtualDoLote(Long unidadeId, Long loteId) {
+        Integer saldoPersistido = store.saldosPorLote.get(chaveSaldo(unidadeId, loteId));
         if (saldoPersistido != null) {
             return saldoPersistido;
         }
@@ -81,6 +100,10 @@ public class InMemoryEntradaEstoqueRepositoryAdapter implements EntradaEstoqueRe
         if (lote == null) {
             throw new IllegalArgumentException("lote nao encontrado para atualizar saldo");
         }
-        return lote.getQuantidadeInicial();
+        return 0;
+    }
+
+    private String chaveSaldo(Long unidadeId, Long loteId) {
+        return unidadeId + ":" + loteId;
     }
 }

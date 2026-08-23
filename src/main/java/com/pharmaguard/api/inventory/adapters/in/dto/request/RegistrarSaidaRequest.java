@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record RegistrarSaidaRequest(
+        @NotNull(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO)
+        @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO)
+        Long unidadeId,
         @NotNull(message = MessageKeys.MSG_VALIDACAO_MEDICAMENTO_ID_OBRIGATORIO)
         @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO)
         Long medicamentoId,

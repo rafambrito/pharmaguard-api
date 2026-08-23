@@ -31,13 +31,14 @@ public class RelatorioProdutosCriticosController implements RelatorioProdutosCri
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate periodoFim,
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
-            @RequestParam(required = false) Long unidadeMedidaId) {
+            @RequestParam(required = false) Long unidadeMedidaId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
         return ResponseEntity.ok(useCase.gerar(new FiltroProdutosCriticos(
                 periodoInicio,
                 periodoFim,
                 medicamentoId,
                 categoriaId,
-                unidadeMedidaId)));
+                unidadeMedidaId, unidadeSaudeId)));
     }
 }

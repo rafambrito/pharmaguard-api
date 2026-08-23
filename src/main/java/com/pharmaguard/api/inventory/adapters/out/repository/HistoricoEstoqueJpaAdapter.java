@@ -42,10 +42,19 @@ public class HistoricoEstoqueJpaAdapter implements HistoricoEstoqueRepositoryPor
         LocalDateTime inicio = dataInicial == null ? null : dataInicial.atStartOfDay();
         LocalDateTime fim = dataFinal == null ? null : dataFinal.atTime(LocalTime.MAX);
 
-        return movimentacaoJpa.findByFiltros(medicamentoId, loteId, tipo, inicio, fim)
+        return movimentacaoJpa.findByFiltros(medicamentoId, loteId, tipo, inicio, fim, null)
                 .stream()
                 .map(this::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<MovimentacaoEstoque> listarPorUnidade(Long unidadeId, Long medicamentoId, Long loteId,
+            MovimentacaoEstoque.Tipo tipo, LocalDate dataInicial, LocalDate dataFinal) {
+        LocalDateTime inicio = dataInicial == null ? null : dataInicial.atStartOfDay();
+        LocalDateTime fim = dataFinal == null ? null : dataFinal.atTime(LocalTime.MAX);
+        return movimentacaoJpa.findByFiltros(medicamentoId, loteId, tipo, inicio, fim, unidadeId)
+                .stream().map(this::toDomain).toList();
     }
 
     @Override

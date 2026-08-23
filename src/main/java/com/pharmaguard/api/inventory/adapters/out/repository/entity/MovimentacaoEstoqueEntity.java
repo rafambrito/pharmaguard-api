@@ -31,6 +31,10 @@ public class MovimentacaoEstoqueEntity {
     @JoinColumn(name = "medicamento_id", nullable = false)
     private MedicamentoEntity medicamento;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unidade_saude_id", nullable = false)
+    private UnidadeSaudeEntity unidadeSaude;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lote_id")
     private LoteEntity lote;
@@ -58,6 +62,9 @@ public class MovimentacaoEstoqueEntity {
 
     public MedicamentoEntity getMedicamento() { return medicamento; }
     public void setMedicamento(MedicamentoEntity medicamento) { this.medicamento = medicamento; }
+
+    public UnidadeSaudeEntity getUnidadeSaude() { return unidadeSaude; }
+    public void setUnidadeSaude(UnidadeSaudeEntity unidadeSaude) { this.unidadeSaude = unidadeSaude; }
 
     public LoteEntity getLote() { return lote; }
     public void setLote(LoteEntity lote) { this.lote = lote; }

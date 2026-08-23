@@ -31,6 +31,10 @@ public class SaidaEstoqueEntity {
     @JoinColumn(name = "medicamento_id", nullable = false)
     private MedicamentoEntity medicamento;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unidade_saude_id", nullable = false)
+    private UnidadeSaudeEntity unidadeSaude;
+
     @Column(name = "quantidade_total", nullable = false)
     private int quantidadeTotal;
 
@@ -55,6 +59,9 @@ public class SaidaEstoqueEntity {
 
     public MedicamentoEntity getMedicamento() { return medicamento; }
     public void setMedicamento(MedicamentoEntity medicamento) { this.medicamento = medicamento; }
+
+    public UnidadeSaudeEntity getUnidadeSaude() { return unidadeSaude; }
+    public void setUnidadeSaude(UnidadeSaudeEntity unidadeSaude) { this.unidadeSaude = unidadeSaude; }
 
     public int getQuantidadeTotal() { return quantidadeTotal; }
     public void setQuantidadeTotal(int quantidadeTotal) { this.quantidadeTotal = quantidadeTotal; }

@@ -9,9 +9,17 @@ import java.util.Optional;
 
 public interface SaldoEstoqueUseCase {
 
-    EstoqueAtual consultarPorMedicamento(Long medicamentoId);
+    EstoqueAtual consultarPorMedicamento(Long unidadeId, Long medicamentoId);
+
+    default EstoqueAtual consultarPorMedicamento(Long medicamentoId) {
+        return consultarPorMedicamento(1L, medicamentoId);
+    }
 
     List<SaldoLoteEstoque> consultarLotesPorMedicamento(Long medicamentoId);
+
+    default List<SaldoLoteEstoque> consultarLotesPorMedicamento(Long unidadeId, Long medicamentoId) {
+        return consultarLotesPorMedicamento(medicamentoId);
+    }
 
     List<SaldoLoteEstoque> consultarTodosOsLotes();
 
@@ -19,7 +27,15 @@ public interface SaldoEstoqueUseCase {
 
         Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId);
 
+        default boolean unidadeAtiva(Long unidadeId) {
+            return true;
+        }
+
         List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long medicamentoId);
+
+        default List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long unidadeId, Long medicamentoId) {
+            return listarSaldosPorMedicamento(medicamentoId);
+        }
 
         List<SaldoLoteEstoque> listarTodosOsSaldos();
 

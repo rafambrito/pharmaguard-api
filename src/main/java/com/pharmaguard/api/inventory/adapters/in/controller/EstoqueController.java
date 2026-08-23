@@ -61,6 +61,7 @@ public class EstoqueController implements EstoqueControllerDoc {
     public ResponseEntity<EntradaEstoqueResponse> registrarEntrada(
             @Valid @RequestBody RegistrarEntradaRequest request) {
         var entrada = entradaUseCase.registrar(
+                request.unidadeId(),
                 request.medicamentoId(),
                 request.loteId(),
                 mapper.toDomain(request));
@@ -72,8 +73,9 @@ public class EstoqueController implements EstoqueControllerDoc {
     @Override
     public ResponseEntity<List<EntradaEstoqueResponse>> listarEntradas(
             @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
-            @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long loteId) {
-        return ResponseEntity.ok(entradaUseCase.listar(medicamentoId, loteId).stream()
+            @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long loteId,
+            @RequestParam @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId) {
+        return ResponseEntity.ok(entradaUseCase.listar(unidadeId, medicamentoId, loteId).stream()
                 .map(mapper::toResponse)
                 .toList());
     }
@@ -89,7 +91,7 @@ public class EstoqueController implements EstoqueControllerDoc {
     @Override
     public ResponseEntity<SaidaEstoqueResponse> registrarSaida(
             @Valid @RequestBody RegistrarSaidaRequest request) {
-        var saida = saidaUseCase.registrar(request.medicamentoId(), mapper.toDomain(request));
+        var saida = saidaUseCase.registrar(request.unidadeId(), request.medicamentoId(), mapper.toDomain(request));
         var response = mapper.toResponse(saida);
         return ResponseEntity.created(URI.create("/api/v1/estoque/saidas/" + response.id())).body(response);
     }
@@ -97,8 +99,9 @@ public class EstoqueController implements EstoqueControllerDoc {
     @GetMapping("/saidas")
     @Override
     public ResponseEntity<List<SaidaEstoqueResponse>> listarSaidas(
-            @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId) {
-        return ResponseEntity.ok(saidaUseCase.listar(medicamentoId).stream()
+            @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @RequestParam @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId) {
+        return ResponseEntity.ok(saidaUseCase.listar(unidadeId, medicamentoId).stream()
                 .map(mapper::toResponse)
                 .toList());
     }
@@ -117,8 +120,9 @@ public class EstoqueController implements EstoqueControllerDoc {
             @RequestParam(required = false) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long loteId,
             @RequestParam(required = false) MovimentacaoEstoque.Tipo tipo,
             @RequestParam(required = false) LocalDate dataInicial,
-            @RequestParam(required = false) LocalDate dataFinal) {
-        return ResponseEntity.ok(historicoUseCase.listar(medicamentoId, loteId, tipo, dataInicial, dataFinal).stream()
+            @RequestParam(required = false) LocalDate dataFinal,
+            @RequestParam @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId) {
+        return ResponseEntity.ok(historicoUseCase.listar(unidadeId, medicamentoId, loteId, tipo, dataInicial, dataFinal).stream()
                 .map(mapper::toResponse)
                 .toList());
     }
@@ -126,15 +130,17 @@ public class EstoqueController implements EstoqueControllerDoc {
     @GetMapping("/saldos/{medicamentoId}")
     @Override
     public ResponseEntity<SaldoEstoqueResponse> consultarSaldo(
-            @PathVariable @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId) {
-        return ResponseEntity.ok(mapper.toResponse(saldoUseCase.consultarPorMedicamento(medicamentoId)));
+                        @PathVariable @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+                        @RequestParam @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId) {
+                return ResponseEntity.ok(mapper.toResponse(saldoUseCase.consultarPorMedicamento(unidadeId, medicamentoId)));
     }
 
     @GetMapping("/saldos/{medicamentoId}/lotes")
     @Override
     public ResponseEntity<List<SaldoLoteResponse>> consultarSaldoPorLote(
-            @PathVariable @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId) {
-        return ResponseEntity.ok(saldoUseCase.consultarLotesPorMedicamento(medicamentoId).stream()
+                        @PathVariable @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+                        @RequestParam @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId) {
+                return ResponseEntity.ok(saldoUseCase.consultarLotesPorMedicamento(unidadeId, medicamentoId).stream()
                 .map(mapper::toResponse)
                 .toList());
     }

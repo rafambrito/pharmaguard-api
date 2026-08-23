@@ -16,6 +16,7 @@ public class SaidaEstoque {
 
     private Long id;
     private Medicamento medicamento;
+    private UnidadeSaude unidadeSaude;
     private int quantidadeTotal;
     private LocalDateTime dataSaida;
     private Motivo motivo;
@@ -51,6 +52,14 @@ public class SaidaEstoque {
 
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = Objects.requireNonNull(medicamento, "medicamento e obrigatorio");
+    }
+
+    public UnidadeSaude getUnidadeSaude() {
+        return unidadeSaude;
+    }
+
+    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
+        this.unidadeSaude = Objects.requireNonNull(unidadeSaude, "unidade de saude e obrigatoria");
     }
 
     public int getQuantidadeTotal() {

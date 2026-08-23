@@ -17,6 +17,7 @@ public interface MovimentacaoEstoqueJpaRepository extends JpaRepository<Moviment
             where (:medicamentoId is null or m.medicamento.id = :medicamentoId)
               and (:loteId is null or m.lote.id = :loteId)
               and (:tipo is null or m.tipo = :tipo)
+              and (:unidadeId is null or m.unidadeSaude.id = :unidadeId)
               and (:dataInicial is null or m.dataMovimentacao >= :dataInicial)
               and (:dataFinal is null or m.dataMovimentacao <= :dataFinal)
             order by m.dataMovimentacao desc
@@ -25,5 +26,6 @@ public interface MovimentacaoEstoqueJpaRepository extends JpaRepository<Moviment
             @Param("loteId") Long loteId,
             @Param("tipo") MovimentacaoEstoque.Tipo tipo,
             @Param("dataInicial") LocalDateTime dataInicial,
-            @Param("dataFinal") LocalDateTime dataFinal);
+            @Param("dataFinal") LocalDateTime dataFinal,
+            @Param("unidadeId") Long unidadeId);
 }

@@ -23,5 +23,6 @@ public interface RelatorioConsumoControllerDoc {
             @Parameter(description = "Id do medicamento para filtrar") Long medicamentoId,
             @Parameter(description = "Id da categoria para filtrar") Long categoriaId,
             @Parameter(description = "Id da unidade de medida para filtrar") Long unidadeMedidaId,
-            @Parameter(description = "Id do fornecedor para filtrar") Long fornecedorId);
+            @Parameter(description = "Id do fornecedor para filtrar") Long fornecedorId,
+            @Parameter(description = "Id da unidade de saude para filtrar") Long unidadeSaudeId);
 }

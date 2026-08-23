@@ -10,11 +10,19 @@ import java.util.Optional;
 
 public interface SaidaEstoqueUseCase {
 
-    SaidaEstoque registrar(Long medicamentoId, SaidaEstoque saida);
+    SaidaEstoque registrar(Long unidadeId, Long medicamentoId, SaidaEstoque saida);
+
+    default SaidaEstoque registrar(Long medicamentoId, SaidaEstoque saida) {
+        return registrar(1L, medicamentoId, saida);
+    }
 
     SaidaEstoque buscarPorId(Long id);
 
     List<SaidaEstoque> listar(Long medicamentoId);
+
+    default List<SaidaEstoque> listar(Long unidadeId, Long medicamentoId) {
+        return listar(medicamentoId);
+    }
 
     interface SaidaEstoqueRepositoryPort {
 
@@ -24,11 +32,27 @@ public interface SaidaEstoqueUseCase {
 
         List<SaidaEstoque> listar(Long medicamentoId);
 
+        default List<SaidaEstoque> listar(Long unidadeId, Long medicamentoId) {
+            return listar(medicamentoId);
+        }
+
         Optional<Medicamento> buscarMedicamentoPorId(Long medicamentoId);
+
+        default boolean unidadeAtiva(Long unidadeId) {
+            return true;
+        }
 
         List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long medicamentoId);
 
+        default List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long unidadeId, Long medicamentoId) {
+            return listarSaldosPorMedicamento(medicamentoId);
+        }
+
         int baixarSaldoLote(Long loteId, int quantidade);
+
+        default int baixarSaldoLote(Long unidadeId, Long loteId, int quantidade) {
+            return baixarSaldoLote(loteId, quantidade);
+        }
 
         MovimentacaoEstoque salvarMovimentacao(MovimentacaoEstoque movimentacao);
     }

@@ -85,6 +85,37 @@ class EstoqueUseCaseTest {
                 .hasMessageContaining("dataInicial");
     }
 
+            @Test
+            void deveRejeitarEntradaEmUnidadeInativa() {
+            Medicamento medicamento = medicamento(1L);
+            FakeEntradaRepository repository = new FakeEntradaRepository(medicamento,
+                lote(2L, medicamento, 100, 30));
+            repository.unidadeAtiva = false;
+
+            EntradaEstoque entrada = new EntradaEstoque();
+            entrada.setQuantidade(10);
+            entrada.setOrigem(EntradaEstoque.Origem.FORNECEDOR);
+
+            assertThatThrownBy(() -> new EntradaEstoqueUseCaseImpl(repository)
+                .registrar(10L, 1L, 2L, entrada))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("unidade de saude");
+            }
+
+            @Test
+            void deveRejeitarSaidaEmUnidadeInativa() {
+            FakeSaidaRepository repository = new FakeSaidaRepository(medicamento(1L),
+                List.of(new SaldoLoteEstoque(10L, "LOT-OLD", LocalDate.now().plusDays(10), 10)), false);
+            SaidaEstoque saida = new SaidaEstoque();
+            saida.setQuantidadeTotal(1);
+            saida.setMotivo(SaidaEstoque.Motivo.DISPENSACAO);
+
+            assertThatThrownBy(() -> new SaidaEstoqueUseCaseImpl(repository)
+                .registrar(10L, 1L, saida))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("unidade de saude");
+            }
+
     private Medicamento medicamento(Long id) {
         Categoria categoria = new Categoria();
         categoria.setNome("Categoria");
@@ -111,6 +142,7 @@ class EstoqueUseCaseTest {
         private final Medicamento medicamento;
         private final Lote lote;
         private int saldo;
+        private boolean unidadeAtiva = true;
         private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
 
         private FakeEntradaRepository(Medicamento medicamento, Lote lote) {
@@ -123,6 +155,7 @@ class EstoqueUseCaseTest {
         public Optional<EntradaEstoque> buscarPorId(Long id) { return Optional.empty(); }
         public List<EntradaEstoque> listar(Long medicamentoId, Long loteId) { return List.of(); }
         public Optional<Medicamento> buscarMedicamentoPorId(Long id) { return Optional.ofNullable(id.equals(medicamento.getId()) ? medicamento : null); }
+        @Override public boolean unidadeAtiva(Long id) { return unidadeAtiva; }
         public Optional<Lote> buscarLotePorMedicamentoIdEId(Long medicamentoId, Long loteId) { return Optional.of(lote); }
         public int creditarSaldoLote(Long loteId, int quantidade) { saldo += quantidade; return saldo; }
         public MovimentacaoEstoque salvarMovimentacao(MovimentacaoEstoque movimentacao) { movimentacoes.add(movimentacao); return movimentacao; }
@@ -132,16 +165,23 @@ class EstoqueUseCaseTest {
         private final Medicamento medicamento;
         private final List<SaldoLoteEstoque> saldos;
         private final List<MovimentacaoEstoque> movimentacoes = new ArrayList<>();
+        private final boolean unidadeAtiva;
 
         private FakeSaidaRepository(Medicamento medicamento, List<SaldoLoteEstoque> saldos) {
+            this(medicamento, saldos, true);
+        }
+
+        private FakeSaidaRepository(Medicamento medicamento, List<SaldoLoteEstoque> saldos, boolean unidadeAtiva) {
             this.medicamento = medicamento;
             this.saldos = new ArrayList<>(saldos);
+            this.unidadeAtiva = unidadeAtiva;
         }
 
         public SaidaEstoque salvar(SaidaEstoque saida) { saida.setId(20L); return saida; }
         public Optional<SaidaEstoque> buscarPorId(Long id) { return Optional.empty(); }
         public List<SaidaEstoque> listar(Long medicamentoId) { return List.of(); }
         public Optional<Medicamento> buscarMedicamentoPorId(Long id) { return Optional.of(medicamento); }
+        @Override public boolean unidadeAtiva(Long id) { return unidadeAtiva; }
         public List<SaldoLoteEstoque> listarSaldosPorMedicamento(Long id) { return saldos; }
         public int baixarSaldoLote(Long loteId, int quantidade) {
             SaldoLoteEstoque saldo = saldos.stream().filter(item -> item.getLoteId().equals(loteId)).findFirst().orElseThrow();

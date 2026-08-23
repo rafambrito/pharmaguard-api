@@ -9,6 +9,7 @@ import java.util.Objects;
 public class EstoqueAtual {
 
     private Medicamento medicamento;
+    private UnidadeSaude unidadeSaude;
     private int quantidadeDisponivel;
     private int quantidadeReservada;
     private LocalDate validadeMaisProxima;
@@ -32,6 +33,14 @@ public class EstoqueAtual {
 
     public void setMedicamento(Medicamento medicamento) {
         this.medicamento = Objects.requireNonNull(medicamento, "medicamento e obrigatorio");
+    }
+
+    public UnidadeSaude getUnidadeSaude() {
+        return unidadeSaude;
+    }
+
+    public void setUnidadeSaude(UnidadeSaude unidadeSaude) {
+        this.unidadeSaude = Objects.requireNonNull(unidadeSaude, "unidade de saude e obrigatoria");
     }
 
     public int getQuantidadeDisponivel() {

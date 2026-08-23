@@ -31,13 +31,14 @@ public class RelatorioVencimentosController implements RelatorioVencimentosContr
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate periodoFim,
             @RequestParam(required = false) Long medicamentoId,
             @RequestParam(required = false) Long categoriaId,
-            @RequestParam(required = false) Long unidadeMedidaId) {
+            @RequestParam(required = false) Long unidadeMedidaId,
+            @RequestParam(required = false) Long unidadeSaudeId) {
 
         return ResponseEntity.ok(useCase.gerar(new FiltroVencimentos(
                 periodoInicio,
                 periodoFim,
                 medicamentoId,
                 categoriaId,
-                unidadeMedidaId)));
+                unidadeMedidaId, unidadeSaudeId)));
     }
 }

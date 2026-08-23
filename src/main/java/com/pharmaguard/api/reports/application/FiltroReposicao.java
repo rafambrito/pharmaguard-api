@@ -8,5 +8,10 @@ public record FiltroReposicao(
         Long medicamentoId,
         Long categoriaId,
         Long unidadeMedidaId,
-        Long fornecedorId) {
+                Long fornecedorId,
+                Long unidadeSaudeId) {
+        public FiltroReposicao(LocalDate inicio, LocalDate fim, Long medicamentoId, Long categoriaId,
+                        Long unidadeMedidaId, Long fornecedorId) {
+                this(inicio, fim, medicamentoId, categoriaId, unidadeMedidaId, fornecedorId, null);
+        }
 }

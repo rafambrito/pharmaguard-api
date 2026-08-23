@@ -1,6 +1,7 @@
 package com.pharmaguard.api.reports.adapters.in.integration;
 
 import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,6 +19,7 @@ import com.pharmaguard.api.shared.infrastructure.web.GlobalExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -62,6 +64,24 @@ class RelatorioConsumoIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is("msg.validacao.periodo.obrigatorio")))
                 .andExpect(jsonPath("$.detail", is("periodoInicio e periodoFim sao obrigatorios")));
+    }
+
+    @Test
+    void deveEncaminharFiltroDeUnidadeDeSaude() throws Exception {
+        AtomicReference<FiltroConsumo> filtroRecebido = new AtomicReference<>();
+        RelatorioConsumoUseCase useCase = new RelatorioConsumoUseCaseImpl(filtro -> {
+            filtroRecebido.set(filtro);
+            return List.of();
+        });
+        MockMvc endpoint = MockMvcBuilders.standaloneSetup(new RelatorioConsumoController(useCase)).build();
+
+        endpoint.perform(get("/api/v1/relatorios/consumo")
+                        .param("periodoInicio", "2026-01-02")
+                        .param("periodoFim", "2026-01-31")
+                        .param("unidadeSaudeId", "7"))
+                .andExpect(status().isOk());
+
+        assertThat(filtroRecebido.get().unidadeSaudeId()).isEqualTo(7L);
     }
 
     private static final class FakeRelatorioConsumoRepository implements RelatorioConsumoUseCase.RelatorioConsumoRepositoryPort {

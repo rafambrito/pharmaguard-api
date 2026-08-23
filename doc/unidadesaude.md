@@ -156,7 +156,7 @@ A estrutura deve evitar que o mesmo estoque seja tratado como global sem distin�
 
 ## Divisão de tarefas sugerida
 
-### T10.1 - Cadastro de Unidade de Saúde
+### T10.1 - Cadastro de Unidade de Saúde ✅ Concluído
 
 Objetivo:
 
@@ -176,7 +176,7 @@ Entregáveis esperados:
 - API de gerenciamento;
 - testes unitários e de integração.
 
-### T10.2 - Vinculação do estoque à unidade
+### T10.2 - Vinculação do estoque à unidade ✅ Concluído
 
 Objetivo:
 
@@ -191,7 +191,7 @@ Entregáveis esperados:
 - regras de consistência;
 - testes de integridade.
 
-### T10.3 - Adaptação de entradas e saídas
+### T10.3 - Adaptação de entradas e saídas ✅ Concluído
 
 Objetivo:
 
@@ -205,7 +205,7 @@ Entregáveis esperados:
 - regras de validação;
 - testes para fluxo de movimentação por unidade.
 
-### T10.4 - Ajustes de consultas e relatórios
+### T10.4 - Ajustes de consultas e relatórios ✅ Concluído
 
 Objetivo:
 
@@ -219,7 +219,7 @@ Entregáveis esperados:
 - filtros e agrupamentos;
 - testes de integração de consultas.
 
-### T10.5 - Validação de consistência e regras de negócio
+### T10.5 - Validação de consistência e regras de negócio ✅ Concluído
 
 Objetivo:
 
@@ -233,7 +233,7 @@ Entregáveis esperados:
 - validações em use cases;
 - documentação de regras de negócio.
 
-### T10.6 - Testes e documentação do módulo
+### T10.6 - Testes e documentação do módulo ✅ Concluído
 
 Objetivo:
 
@@ -246,6 +246,29 @@ Entregáveis esperados:
 - cobertura mínima de testes;
 - documentação de API;
 - referência do módulo no contexto do projeto.
+
+Evidências:
+
+- testes unitários para criação, atualização, unicidade e inativação;
+- testes HTTP para CRUD, validação de campos e status da unidade;
+- testes de estoque por unidade, entradas, saídas, histórico e relatórios;
+- execução focada:
+
+```bash
+./mvnw -q -Dtest=UnidadeSaudeUseCaseTest,UnidadeSaudeControllerIntegrationTest,UnidadeEstoqueIsolamentoTest,EstoqueUseCaseTest,RelatorioConsumoIntegrationTest test
+```
+
+### API de Unidade de Saúde
+
+| Método | Endpoint | Finalidade |
+|---|---|---|
+| POST | `/api/v1/unidades-saude` | Cadastrar unidade ativa |
+| GET | `/api/v1/unidades-saude` | Listar unidades |
+| GET | `/api/v1/unidades-saude/{id}` | Consultar unidade |
+| PUT | `/api/v1/unidades-saude/{id}` | Atualizar dados |
+| DELETE | `/api/v1/unidades-saude/{id}` | Inativar unidade |
+
+As operações de estoque exigem `unidadeId` e os relatórios aceitam `unidadeSaudeId` como filtro opcional.
 
 ---
 

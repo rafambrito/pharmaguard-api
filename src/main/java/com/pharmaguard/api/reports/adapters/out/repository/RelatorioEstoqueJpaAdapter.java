@@ -83,8 +83,8 @@ public class RelatorioEstoqueJpaAdapter implements
 
     @Override
     public List<RelatorioProdutosCriticosResponse.ItemCritico> listarProdutosCriticos(FiltroProdutosCriticos filtro) {
-        Map<Long, Integer> saldos = saldosPorMedicamento();
-        Map<Long, Double> consumos = consumosPorMedicamento(filtro.periodoInicio(), filtro.periodoFim());
+        Map<Long, Integer> saldos = saldosPorMedicamento(filtro.unidadeSaudeId());
+        Map<Long, Double> consumos = consumosPorMedicamento(filtro.periodoInicio(), filtro.periodoFim(), filtro.unidadeSaudeId());
         double dias = diasNoPeriodo(filtro.periodoInicio(), filtro.periodoFim());
         List<RelatorioProdutosCriticosResponse.ItemCritico> itens = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class RelatorioEstoqueJpaAdapter implements
 
     @Override
     public List<RelatorioEstoqueMinimoResponse.ItemEstoqueMinimo> listarItensAbaixoMinimo(FiltroEstoqueMinimo filtro) {
-        Map<Long, Integer> saldos = saldosPorMedicamento();
+        Map<Long, Integer> saldos = saldosPorMedicamento(filtro.unidadeSaudeId());
         List<RelatorioEstoqueMinimoResponse.ItemEstoqueMinimo> itens = new ArrayList<>();
         for (MedicamentoEntity medicamento : medicamentosFiltrados(filtro.medicamentoId(), filtro.categoriaId(), filtro.unidadeMedidaId())) {
             int saldo = saldos.getOrDefault(medicamento.getId(), 0);
@@ -126,6 +126,7 @@ public class RelatorioEstoqueJpaAdapter implements
     public List<RelatorioVencimentosResponse.ItemVencimento> listarItensVencendo(FiltroVencimentos filtro) {
         List<RelatorioVencimentosResponse.ItemVencimento> itens = new ArrayList<>();
         for (SaldoLoteEstoqueEntity saldo : saldoJpa.findAll()) {
+            if (filtro.unidadeSaudeId() != null && !filtro.unidadeSaudeId().equals(saldo.getUnidadeSaudeId())) continue;
             LoteEntity lote = saldo.getLote();
             MedicamentoEntity medicamento = lote.getMedicamento();
             if (!matches(medicamento, filtro.medicamentoId(), filtro.categoriaId(), filtro.unidadeMedidaId())
@@ -169,7 +170,8 @@ public class RelatorioEstoqueJpaAdapter implements
                 filtro.medicamentoId(),
                 filtro.categoriaId(),
                 filtro.unidadeMedidaId(),
-                filtro.fornecedorId());
+                filtro.fornecedorId(),
+                filtro.unidadeSaudeId());
 
         int totalComReposicao = 0;
         int totalRiscoRuptura = 0;
@@ -226,7 +228,8 @@ public class RelatorioEstoqueJpaAdapter implements
                 filtro.medicamentoId(),
                 filtro.categoriaId(),
                 filtro.unidadeMedidaId(),
-                filtro.fornecedorId());
+                filtro.fornecedorId(),
+                filtro.unidadeSaudeId());
 
         List<RelatorioAlertasResponse.ItemAlerta> alertas = new ArrayList<>();
         int totalRuptura = 0;
@@ -299,7 +302,8 @@ public class RelatorioEstoqueJpaAdapter implements
                 filtro.medicamentoId(),
                 filtro.categoriaId(),
                 filtro.unidadeMedidaId(),
-                filtro.fornecedorId());
+                filtro.fornecedorId(),
+                filtro.unidadeSaudeId());
     }
 
     private List<BaseAnaliticaMedicamento> baseAnaliticaPorParametros(
@@ -308,11 +312,12 @@ public class RelatorioEstoqueJpaAdapter implements
             Long medicamentoId,
             Long categoriaId,
             Long unidadeMedidaId,
-            Long fornecedorId) {
-        Map<Long, Integer> saldos = saldosPorMedicamento();
-        Map<Long, Double> consumos = consumosPorMedicamento(periodoInicio, periodoFim);
-        Map<Long, List<Double>> serieConsumoDiario = serieConsumoDiarioPorMedicamento(periodoInicio, periodoFim);
-        Map<Long, AnaliseValidadeMedicamento> analiseValidade = analiseValidadePorMedicamento();
+            Long fornecedorId,
+            Long unidadeSaudeId) {
+        Map<Long, Integer> saldos = saldosPorMedicamento(unidadeSaudeId);
+        Map<Long, Double> consumos = consumosPorMedicamento(periodoInicio, periodoFim, unidadeSaudeId);
+        Map<Long, List<Double>> serieConsumoDiario = serieConsumoDiarioPorMedicamento(periodoInicio, periodoFim, unidadeSaudeId);
+        Map<Long, AnaliseValidadeMedicamento> analiseValidade = analiseValidadePorMedicamento(unidadeSaudeId);
         int diasNoPeriodo = (int) diasNoPeriodo(periodoInicio, periodoFim);
         int leadTimeDias = leadTimePorFornecedor(fornecedorId);
 
@@ -348,7 +353,7 @@ public class RelatorioEstoqueJpaAdapter implements
         return base;
     }
 
-    private Map<Long, AnaliseValidadeMedicamento> analiseValidadePorMedicamento() {
+    private Map<Long, AnaliseValidadeMedicamento> analiseValidadePorMedicamento(Long unidadeSaudeId) {
         Map<Long, Integer> quantidadeValida = new HashMap<>();
         Map<Long, Integer> quantidadeProxima = new HashMap<>();
         Map<Long, Integer> quantidadeVencida = new HashMap<>();
@@ -357,6 +362,7 @@ public class RelatorioEstoqueJpaAdapter implements
 
         LocalDate hoje = LocalDate.now();
         for (SaldoLoteEstoqueEntity saldo : saldoJpa.findAll()) {
+            if (unidadeSaudeId != null && !unidadeSaudeId.equals(saldo.getUnidadeSaudeId())) continue;
             Long medicamentoId = saldo.getLote().getMedicamento().getId();
             int quantidade = Math.max(0, saldo.getQuantidadeDisponivel());
             if (quantidade == 0) {
@@ -389,13 +395,14 @@ public class RelatorioEstoqueJpaAdapter implements
         return analises;
     }
 
-    private Map<Long, List<Double>> serieConsumoDiarioPorMedicamento(LocalDate inicio, LocalDate fim) {
+        private Map<Long, List<Double>> serieConsumoDiarioPorMedicamento(LocalDate inicio, LocalDate fim,
+            Long unidadeSaudeId) {
         LocalDateTime dataInicio = inicio.atStartOfDay();
         LocalDateTime dataFim = fim.plusDays(1).atStartOfDay().minusNanos(1);
 
         Map<Long, Map<LocalDate, Double>> consumoPorMedicamentoPorDia = new HashMap<>();
         for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByFiltros(
-                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim)) {
+                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
             Long medicamentoId = movimentacao.getMedicamento().getId();
             LocalDate dataConsumo = movimentacao.getDataMovimentacao().toLocalDate();
             consumoPorMedicamentoPorDia
@@ -463,20 +470,21 @@ public class RelatorioEstoqueJpaAdapter implements
                 && (unidadeMedidaId == null || unidadeMedidaId.equals(medicamento.getUnidadeMedida().getId()));
     }
 
-    private Map<Long, Integer> saldosPorMedicamento() {
+    private Map<Long, Integer> saldosPorMedicamento(Long unidadeSaudeId) {
         Map<Long, Integer> saldos = new HashMap<>();
         for (SaldoLoteEstoqueEntity saldo : saldoJpa.findAll()) {
+            if (unidadeSaudeId != null && !unidadeSaudeId.equals(saldo.getUnidadeSaudeId())) continue;
             saldos.merge(saldo.getLote().getMedicamento().getId(), saldo.getQuantidadeDisponivel(), Integer::sum);
         }
         return saldos;
     }
 
-    private Map<Long, Double> consumosPorMedicamento(LocalDate inicio, LocalDate fim) {
+    private Map<Long, Double> consumosPorMedicamento(LocalDate inicio, LocalDate fim, Long unidadeSaudeId) {
         LocalDateTime dataInicio = inicio.atStartOfDay();
         LocalDateTime dataFim = fim.plusDays(1).atStartOfDay().minusNanos(1);
         Map<Long, Double> consumos = new HashMap<>();
         for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByFiltros(
-                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim)) {
+                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
             consumos.merge(movimentacao.getMedicamento().getId(), (double) movimentacao.getQuantidade(), Double::sum);
         }
         return consumos;

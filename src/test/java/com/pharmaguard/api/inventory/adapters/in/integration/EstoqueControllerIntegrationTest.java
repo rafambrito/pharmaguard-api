@@ -72,9 +72,9 @@ class EstoqueControllerIntegrationTest {
         estoque.definirLotesAtivos(List.of(new SaldoLoteEstoque(
                 1L, 2L, "LOT-001", LocalDate.now().plusDays(30), 80)));
         estoque.recalcularComBaseNosLotes();
-        when(saldoUseCase.consultarPorMedicamento(1L)).thenReturn(estoque);
+        when(saldoUseCase.consultarPorMedicamento(1L, 1L)).thenReturn(estoque);
 
-        mockMvc.perform(get("/api/v1/estoque/saldos/1"))
+        mockMvc.perform(get("/api/v1/estoque/saldos/1").param("unidadeId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medicamentoId", is(1)))
                 .andExpect(jsonPath("$.quantidadeDisponivel", is(80)))
@@ -90,12 +90,13 @@ class EstoqueControllerIntegrationTest {
         entrada.getLote().setId(2L);
         entrada.setQuantidade(20);
         entrada.setOrigem(EntradaEstoque.Origem.FORNECEDOR);
-        when(entradaUseCase.registrar(eq(1L), eq(2L), any(EntradaEstoque.class))).thenReturn(entrada);
+        when(entradaUseCase.registrar(eq(1L), eq(1L), eq(2L), any(EntradaEstoque.class))).thenReturn(entrada);
 
         mockMvc.perform(post("/api/v1/estoque/entradas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
+                                  "unidadeId": 1,
                                   "medicamentoId": 1,
                                   "loteId": 2,
                                   "quantidade": 20,
