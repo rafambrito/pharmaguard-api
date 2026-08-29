@@ -120,8 +120,12 @@ class InventoryControllerIntegrationTest {
 
     @Test
     void deveExecutarCrudDeMedicamentoELote() throws Exception {
-        criarCategoria();
         criarUnidadeMedida();
+
+        mockMvc.perform(get("/api/v1/medicamentos/categorias"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(7)))
+                .andExpect(jsonPath("$[0].codigo", is("ANTIBIOTICO")));
 
         mockMvc.perform(post("/api/v1/medicamentos")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -130,18 +134,18 @@ class InventoryControllerIntegrationTest {
                                   "nome": "Amoxicilina",
                                   "apresentacao": "500mg capsula",
                                   "descricao": "Antibiotico",
-                                  "categoriaId": 1,
-                                  "unidadeMedidaId": 2,
+                                  "categoria": "ANTIBIOTICO",
+                                  "unidadeMedidaId": 1,
                                   "criticidade": "MEDIA"
                                 }
                                 """))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/v1/medicamentos/3"))
+                                .andExpect(header().string("Location", "/api/v1/medicamentos/3"))
                 .andExpect(jsonPath("$.nome", is("Amoxicilina")))
-                .andExpect(jsonPath("$.categoria.id", is(1)))
-                .andExpect(jsonPath("$.unidadeMedida.id", is(2)));
+                .andExpect(jsonPath("$.categoria.nome", is("Antibiótico")))
+                .andExpect(jsonPath("$.unidadeMedida.id", is(1)));
 
-        mockMvc.perform(get("/api/v1/medicamentos/3"))
+                        mockMvc.perform(get("/api/v1/medicamentos/3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome", is("Amoxicilina")));
 
@@ -149,15 +153,15 @@ class InventoryControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        mockMvc.perform(put("/api/v1/medicamentos/3")
+                                mockMvc.perform(put("/api/v1/medicamentos/3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
                                   "nome": "Amoxicilina Atualizada",
                                   "apresentacao": "500mg capsula",
                                   "descricao": "Antibiotico atualizado",
-                                  "categoriaId": 1,
-                                  "unidadeMedidaId": 2,
+                                                                                                                                        "categoria": "ANTIBIOTICO",
+                                                                                                                                        "unidadeMedidaId": 1,
                                   "criticidade": "ALTA",
                                   "ativo": false
                                 }
@@ -207,18 +211,6 @@ class InventoryControllerIntegrationTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Requisicao invalida. Verifique os campos informados.")));
-    }
-
-    private void criarCategoria() throws Exception {
-        mockMvc.perform(post("/api/v1/categorias")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "nome": "Antibioticos",
-                                  "descricao": "Medicamentos para infeccoes"
-                                }
-                                """))
-                .andExpect(status().isCreated());
     }
 
     private void criarUnidadeMedida() throws Exception {

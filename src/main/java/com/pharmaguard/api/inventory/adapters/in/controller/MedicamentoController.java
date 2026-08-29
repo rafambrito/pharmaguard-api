@@ -3,11 +3,14 @@ package com.pharmaguard.api.inventory.adapters.in.controller;
 import com.pharmaguard.api.inventory.adapters.in.controller.doc.MedicamentoControllerDoc;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.AtualizarMedicamentoRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarMedicamentoRequest;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.CategoriaMedicamentoResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.MedicamentoResponse;
 import com.pharmaguard.api.inventory.adapters.in.mapper.InventoryAdapterInMapper;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCase;
+import com.pharmaguard.api.inventory.domain.CategoriaMedicamento;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,10 +39,17 @@ public class MedicamentoController implements MedicamentoControllerDoc {
     public ResponseEntity<MedicamentoResponse> criar(@Valid @RequestBody CriarMedicamentoRequest request) {
         var medicamento = medicamentoUseCase.criar(
                 mapper.toDomain(request),
-                request.categoriaId(),
+                request.categoria(),
                 request.unidadeMedidaId());
         var response = mapper.toResponse(medicamento);
         return ResponseEntity.created(URI.create("/api/v1/medicamentos/" + response.id())).body(response);
+    }
+
+    @Override
+    @GetMapping("/categorias")
+    public ResponseEntity<List<CategoriaMedicamentoResponse>> listarCategorias() {
+        var response = Arrays.stream(CategoriaMedicamento.values()).map(mapper::toResponse).toList();
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -63,7 +73,7 @@ public class MedicamentoController implements MedicamentoControllerDoc {
         var medicamento = medicamentoUseCase.buscarPorId(id);
         mapper.applyToDomain(request, medicamento);
         medicamento.setId(id);
-        var atualizado = medicamentoUseCase.atualizar(medicamento, request.categoriaId(), request.unidadeMedidaId());
+        var atualizado = medicamentoUseCase.atualizar(medicamento, request.categoria(), request.unidadeMedidaId());
         return ResponseEntity.ok(mapper.toResponse(atualizado));
     }
 

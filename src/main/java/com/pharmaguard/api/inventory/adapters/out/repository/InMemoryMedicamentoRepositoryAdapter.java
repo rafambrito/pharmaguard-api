@@ -55,8 +55,19 @@ public class InMemoryMedicamentoRepositoryAdapter implements MedicamentoReposito
     }
 
     @Override
-    public Optional<Categoria> buscarCategoriaPorId(Long id) {
-        return Optional.ofNullable(store.categorias.get(id));
+    public Optional<Categoria> buscarCategoriaPorNome(String nome) {
+        return store.categorias.values().stream()
+                .filter(categoria -> categoria.getNome().equalsIgnoreCase(nome))
+                .findFirst();
+    }
+
+    @Override
+    public Categoria salvarCategoria(Categoria categoria) {
+        if (categoria.getId() == null) {
+            categoria.setId(store.nextId());
+        }
+        store.categorias.put(categoria.getId(), categoria);
+        return categoria;
     }
 
     @Override

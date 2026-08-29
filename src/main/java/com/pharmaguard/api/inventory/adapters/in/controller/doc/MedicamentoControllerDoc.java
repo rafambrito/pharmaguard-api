@@ -2,6 +2,7 @@ package com.pharmaguard.api.inventory.adapters.in.controller.doc;
 
 import com.pharmaguard.api.inventory.adapters.in.dto.request.AtualizarMedicamentoRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarMedicamentoRequest;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.CategoriaMedicamentoResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.MedicamentoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +32,10 @@ public interface MedicamentoControllerDoc {
     @Operation(summary = "Listar medicamentos", description = "Lista todos os medicamentos")
     @ApiResponse(responseCode = "200", description = "Lista de medicamentos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MedicamentoResponse.class)))
     ResponseEntity<List<MedicamentoResponse>> listar();
+
+        @Operation(summary = "Listar categorias fixas de medicamentos", description = "Lista as categorias permitidas para cadastro de medicamentos")
+        @ApiResponse(responseCode = "200", description = "Lista de categorias fixas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaMedicamentoResponse.class)))
+        ResponseEntity<List<CategoriaMedicamentoResponse>> listarCategorias();
 
     @Operation(summary = "Buscar medicamento por id", description = "Retorna um medicamento pelo id")
     @ApiResponses(value = {

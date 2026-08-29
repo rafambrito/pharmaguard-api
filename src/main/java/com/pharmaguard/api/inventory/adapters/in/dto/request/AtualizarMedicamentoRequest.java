@@ -1,5 +1,6 @@
 package com.pharmaguard.api.inventory.adapters.in.dto.request;
 
+import com.pharmaguard.api.inventory.domain.CategoriaMedicamento;
 import com.pharmaguard.api.shared.config.MessageKeys;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,8 +16,8 @@ public record AtualizarMedicamentoRequest(
         String apresentacao,
         @Size(max = 500, message = MessageKeys.MSG_VALIDACAO_DESCRICAO_TAMANHO_MAXIMO)
         String descricao,
-        @NotNull(message = MessageKeys.MSG_VALIDACAO_CATEGORIA_ID_OBRIGATORIO)
-        Long categoriaId,
+        @NotNull(message = MessageKeys.MSG_VALIDACAO_CATEGORIA_OBRIGATORIA)
+        CategoriaMedicamento categoria,
         @NotNull(message = MessageKeys.MSG_VALIDACAO_UNIDADE_MEDIDA_ID_OBRIGATORIO)
         Long unidadeMedidaId,
         @NotBlank(message = MessageKeys.MSG_VALIDACAO_CRITICIDADE_OBRIGATORIA)

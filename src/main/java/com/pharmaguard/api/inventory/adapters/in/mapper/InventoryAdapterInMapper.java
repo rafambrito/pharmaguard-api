@@ -10,6 +10,7 @@ import com.pharmaguard.api.inventory.adapters.in.dto.request.CriarUnidadeMedidaR
 import com.pharmaguard.api.inventory.adapters.in.dto.request.RegistrarEntradaRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.request.RegistrarSaidaRequest;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.CategoriaResponse;
+import com.pharmaguard.api.inventory.adapters.in.dto.response.CategoriaMedicamentoResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.EntradaEstoqueResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.LoteResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.MedicamentoResponse;
@@ -20,6 +21,7 @@ import com.pharmaguard.api.inventory.adapters.in.dto.response.SaldoLoteResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.UnidadeMedidaResponse;
 import com.pharmaguard.api.inventory.domain.EntradaEstoque;
 import com.pharmaguard.api.inventory.domain.Categoria;
+import com.pharmaguard.api.inventory.domain.CategoriaMedicamento;
 import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
@@ -56,6 +58,10 @@ public class InventoryAdapterInMapper {
                 categoria.getStatus() == Categoria.Status.ATIVA,
                 categoria.getDataCriacao(),
                 categoria.getDataUltimaAlteracao());
+    }
+
+    public CategoriaMedicamentoResponse toResponse(CategoriaMedicamento categoria) {
+        return new CategoriaMedicamentoResponse(categoria.name(), categoria.getNome(), categoria.getDescricao());
     }
 
     public UnidadeMedida toDomain(CriarUnidadeMedidaRequest request) {

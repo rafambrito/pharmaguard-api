@@ -307,7 +307,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
         "404":
-          description: Categoria ou unidade de medida nao encontrada
+          description: Unidade de medida nao encontrada
           content:
             application/problem+json:
               schema:
@@ -332,6 +332,22 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/MedicamentoResponse"
+
+  /api/v1/medicamentos/categorias:
+    get:
+      tags:
+        - Medicamentos
+      summary: Listar categorias fixas de medicamentos
+      operationId: listarCategoriasMedicamento
+      responses:
+        "200":
+          description: Lista de categorias fixas permitidas para medicamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoriaMedicamentoResponse"
 
   /api/v1/medicamentos/{id}:
     get:
@@ -391,7 +407,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
         "404":
-          description: Medicamento, categoria ou unidade de medida nao encontrado
+          description: Medicamento ou unidade de medida nao encontrado
           content:
             application/problem+json:
               schema:
@@ -662,7 +678,7 @@ components:
       required:
         - nome
         - apresentacao
-        - categoriaId
+        - categoria
         - unidadeMedidaId
         - criticidade
       properties:
@@ -675,10 +691,8 @@ components:
         descricao:
           type: string
           example: Antibiotico de amplo espectro
-        categoriaId:
-          type: integer
-          format: int64
-          example: 1
+        categoria:
+          $ref: "#/components/schemas/CategoriaMedicamento"
         unidadeMedidaId:
           type: integer
           format: int64
@@ -697,7 +711,7 @@ components:
       required:
         - nome
         - apresentacao
-        - categoriaId
+        - categoria
         - unidadeMedidaId
         - criticidade
       properties:
@@ -710,10 +724,8 @@ components:
         descricao:
           type: string
           example: Antibiotico de amplo espectro
-        categoriaId:
-          type: integer
-          format: int64
-          example: 1
+        categoria:
+          $ref: "#/components/schemas/CategoriaMedicamento"
         unidadeMedidaId:
           type: integer
           format: int64
@@ -729,6 +741,30 @@ components:
         ativo:
           type: boolean
           example: true
+
+    CategoriaMedicamento:
+      type: string
+      enum:
+        - ANTIBIOTICO
+        - ANALGESICO
+        - ANTIINFLAMATORIO
+        - ANTITERMICO
+        - CONTROLADO
+        - INSUMO
+        - OUTROS
+      example: ANTIBIOTICO
+
+    CategoriaMedicamentoResponse:
+      type: object
+      properties:
+        codigo:
+          $ref: "#/components/schemas/CategoriaMedicamento"
+        nome:
+          type: string
+          example: Antibiótico
+        descricao:
+          type: string
+          example: Medicamentos para tratamento de infecções
 
     MedicamentoResponse:
       type: object

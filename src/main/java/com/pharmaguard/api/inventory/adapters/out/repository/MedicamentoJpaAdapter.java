@@ -59,8 +59,13 @@ public class MedicamentoJpaAdapter implements MedicamentoRepositoryPort {
     }
 
     @Override
-    public Optional<Categoria> buscarCategoriaPorId(Long id) {
-        return categoriaJpa.findById(id).map(this::categoriaToDomain);
+    public Optional<Categoria> buscarCategoriaPorNome(String nome) {
+        return categoriaJpa.findByNomeIgnoreCase(nome).map(this::categoriaToDomain);
+    }
+
+    @Override
+    public Categoria salvarCategoria(Categoria categoria) {
+        return categoriaToDomain(categoriaJpa.save(categoriaToEntity(categoria)));
     }
 
     @Override
@@ -92,6 +97,17 @@ public class MedicamentoJpaAdapter implements MedicamentoRepositoryPort {
     private Categoria categoriaToDomain(CategoriaEntity e) {
         return new Categoria(e.getId(), e.getNome(), e.getDescricao(), e.getStatus(),
                 e.getDataCriacao(), e.getDataUltimaAlteracao());
+    }
+
+    private CategoriaEntity categoriaToEntity(Categoria c) {
+        CategoriaEntity e = new CategoriaEntity();
+        e.setId(c.getId());
+        e.setNome(c.getNome());
+        e.setDescricao(c.getDescricao());
+        e.setStatus(c.getStatus());
+        e.setDataCriacao(c.getDataCriacao());
+        e.setDataUltimaAlteracao(c.getDataUltimaAlteracao());
+        return e;
     }
 
     private UnidadeMedida unidadeMedidaToDomain(UnidadeMedidaEntity e) {

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.pharmaguard.api.inventory.domain.Categoria;
+import com.pharmaguard.api.inventory.domain.CategoriaMedicamento;
 import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
@@ -49,13 +50,13 @@ class InventoryUseCaseImplTest {
         UnidadeMedidaUseCase unidadeMedidaUseCase = new UnidadeMedidaUseCaseImpl(new InventoryTestSupport.UnidadeMedidaRepositoryAdapter(store));
         MedicamentoUseCase medicamentoUseCase = new MedicamentoUseCaseImpl(new InventoryTestSupport.MedicamentoRepositoryAdapter(store));
 
-        Categoria categoria = categoriaUseCase.criar(criarCategoria());
         UnidadeMedida unidadeMedida = unidadeMedidaUseCase.criar(criarUnidadeMedida());
 
-        Medicamento salvo = medicamentoUseCase.criar(criarMedicamento(), categoria.getId(), unidadeMedida.getId());
+        Medicamento salvo = medicamentoUseCase.criar(
+            criarMedicamento(), CategoriaMedicamento.ANTIBIOTICO, unidadeMedida.getId());
 
         assertNotNull(salvo.getId());
-        assertEquals(categoria.getId(), salvo.getCategoria().getId());
+        assertEquals(CategoriaMedicamento.ANTIBIOTICO.getNome(), salvo.getCategoria().getNome());
         assertEquals(unidadeMedida.getId(), salvo.getUnidadeMedida().getId());
     }
 
@@ -66,12 +67,12 @@ class InventoryUseCaseImplTest {
         UnidadeMedidaUseCase unidadeMedidaUseCase = new UnidadeMedidaUseCaseImpl(new InventoryTestSupport.UnidadeMedidaRepositoryAdapter(store));
         MedicamentoUseCase medicamentoUseCase = new MedicamentoUseCaseImpl(new InventoryTestSupport.MedicamentoRepositoryAdapter(store));
 
-        Categoria categoria = categoriaUseCase.criar(criarCategoria());
         UnidadeMedida unidadeMedida = unidadeMedidaUseCase.criar(criarUnidadeMedida());
-        medicamentoUseCase.criar(criarMedicamento(), categoria.getId(), unidadeMedida.getId());
+        medicamentoUseCase.criar(criarMedicamento(), CategoriaMedicamento.ANTIBIOTICO, unidadeMedida.getId());
 
         assertThrows(BusinessException.class,
-                () -> medicamentoUseCase.criar(criarMedicamento(), categoria.getId(), unidadeMedida.getId()));
+            () -> medicamentoUseCase.criar(
+                criarMedicamento(), CategoriaMedicamento.ANTIBIOTICO, unidadeMedida.getId()));
     }
 
     @Test
@@ -82,9 +83,9 @@ class InventoryUseCaseImplTest {
         MedicamentoUseCase medicamentoUseCase = new MedicamentoUseCaseImpl(new InventoryTestSupport.MedicamentoRepositoryAdapter(store));
         LoteUseCase loteUseCase = new LoteUseCaseImpl(new InventoryTestSupport.LoteRepositoryAdapter(store));
 
-        Categoria categoria = categoriaUseCase.criar(criarCategoria());
         UnidadeMedida unidadeMedida = unidadeMedidaUseCase.criar(criarUnidadeMedida());
-        Medicamento medicamento = medicamentoUseCase.criar(criarMedicamento(), categoria.getId(), unidadeMedida.getId());
+        Medicamento medicamento = medicamentoUseCase.criar(
+            criarMedicamento(), CategoriaMedicamento.ANTIBIOTICO, unidadeMedida.getId());
 
         Lote lote = new Lote();
         lote.setNumeroLote("LOT-001");

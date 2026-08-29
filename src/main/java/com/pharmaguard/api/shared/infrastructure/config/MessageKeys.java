@@ -45,6 +45,7 @@ public final class MessageKeys {
     public static final String MSG_VALIDACAO_DESCRICAO_TAMANHO_MAXIMO = "msg.validacao.descricao.tamanho.maximo";
     public static final String MSG_VALIDACAO_CRITICIDADE_OBRIGATORIA = "msg.validacao.criticidade.obrigatoria";
     public static final String MSG_VALIDACAO_CRITICIDADE_INVALIDA = "msg.validacao.criticidade.invalida";
+    public static final String MSG_VALIDACAO_CATEGORIA_OBRIGATORIA = "msg.validacao.categoria.obrigatoria";
     public static final String MSG_VALIDACAO_CATEGORIA_ID_OBRIGATORIO = "msg.validacao.categoria.id.obrigatorio";
     public static final String MSG_VALIDACAO_UNIDADE_MEDIDA_ID_OBRIGATORIO = "msg.validacao.unidade.medida.id.obrigatorio";
     public static final String MSG_VALIDACAO_NUMERO_LOTE_OBRIGATORIO = "msg.validacao.numero.lote.obrigatorio";

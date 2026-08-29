@@ -1,6 +1,7 @@
 package com.pharmaguard.api.inventory.application;
 
 import com.pharmaguard.api.inventory.domain.Categoria;
+import com.pharmaguard.api.inventory.domain.CategoriaMedicamento;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
 import com.pharmaguard.api.shared.domain.exception.BusinessException;
@@ -23,10 +24,10 @@ public class MedicamentoUseCaseImpl implements MedicamentoUseCase {
     }
 
     @Override
-    public Medicamento criar(Medicamento medicamento, Long categoriaId, Long unidadeMedidaId) {
+    public Medicamento criar(Medicamento medicamento, CategoriaMedicamento categoriaMedicamento, Long unidadeMedidaId) {
         Objects.requireNonNull(medicamento, "medicamento e obrigatorio");
 
-        Categoria categoria = resolverCategoria(categoriaId);
+        Categoria categoria = resolverCategoria(categoriaMedicamento);
         UnidadeMedida unidadeMedida = resolverUnidadeMedida(unidadeMedidaId);
 
         if (repository.existePorNomeEApresentacao(medicamento.getNome(), medicamento.getApresentacao())) {
@@ -41,14 +42,14 @@ public class MedicamentoUseCaseImpl implements MedicamentoUseCase {
     }
 
     @Override
-    public Medicamento atualizar(Medicamento medicamento, Long categoriaId, Long unidadeMedidaId) {
+    public Medicamento atualizar(Medicamento medicamento, CategoriaMedicamento categoriaMedicamento, Long unidadeMedidaId) {
         Objects.requireNonNull(medicamento, "medicamento e obrigatorio");
         Objects.requireNonNull(medicamento.getId(), "id do medicamento e obrigatorio");
 
         Medicamento existente = repository.buscarPorId(medicamento.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(MSG_RECURSO_MEDICAMENTO_NAO_ENCONTRADO));
 
-        Categoria categoria = resolverCategoria(categoriaId);
+        Categoria categoria = resolverCategoria(categoriaMedicamento);
         UnidadeMedida unidadeMedida = resolverUnidadeMedida(unidadeMedidaId);
 
         boolean nomeOuApresentacaoAlterados = !Objects.equals(existente.getNome(), medicamento.getNome())
@@ -85,10 +86,19 @@ public class MedicamentoUseCaseImpl implements MedicamentoUseCase {
         return repository.listarTodos();
     }
 
-    private Categoria resolverCategoria(Long categoriaId) {
-        Objects.requireNonNull(categoriaId, "categoriaId e obrigatorio");
-        return repository.buscarCategoriaPorId(categoriaId)
-                .orElseThrow(() -> new ResourceNotFoundException(MSG_RECURSO_CATEGORIA_NAO_ENCONTRADA));
+    private Categoria resolverCategoria(CategoriaMedicamento categoriaMedicamento) {
+        Objects.requireNonNull(categoriaMedicamento, "categoria e obrigatoria");
+        return repository.buscarCategoriaPorNome(categoriaMedicamento.getNome())
+                .orElseGet(() -> criarCategoriaFixa(categoriaMedicamento));
+    }
+
+    private Categoria criarCategoriaFixa(CategoriaMedicamento categoriaMedicamento) {
+        Categoria categoria = new Categoria();
+        categoria.setNome(categoriaMedicamento.getNome());
+        categoria.setDescricao(categoriaMedicamento.getDescricao());
+        categoria.setStatus(Categoria.Status.ATIVA);
+        categoria.marcarCriacao();
+        return repository.salvarCategoria(categoria);
     }
 
     private UnidadeMedida resolverUnidadeMedida(Long unidadeMedidaId) {
