@@ -50,12 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean({LoteJpaRepository.class, SaldoLoteEstoqueJpaRepository.class,
-    MovimentacaoEstoqueJpaRepository.class, MedicamentoJpaRepository.class, FornecedorJpaRepository.class})
+@Primary
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class RelatorioEstoqueJpaAdapter implements
     MetricasMotorEstatisticoUseCase.MetricasMotorEstatisticoRepositoryPort,
     RelatorioAlertasUseCase.RelatorioAlertasRepositoryPort,
@@ -401,8 +402,8 @@ public class RelatorioEstoqueJpaAdapter implements
         LocalDateTime dataFim = fim.plusDays(1).atStartOfDay().minusNanos(1);
 
         Map<Long, Map<LocalDate, Double>> consumoPorMedicamentoPorDia = new HashMap<>();
-        for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByFiltros(
-                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
+        for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByPeriodoObrigatorio(
+            null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
             Long medicamentoId = movimentacao.getMedicamento().getId();
             LocalDate dataConsumo = movimentacao.getDataMovimentacao().toLocalDate();
             consumoPorMedicamentoPorDia
@@ -483,8 +484,8 @@ public class RelatorioEstoqueJpaAdapter implements
         LocalDateTime dataInicio = inicio.atStartOfDay();
         LocalDateTime dataFim = fim.plusDays(1).atStartOfDay().minusNanos(1);
         Map<Long, Double> consumos = new HashMap<>();
-        for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByFiltros(
-                null, null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
+        for (MovimentacaoEstoqueEntity movimentacao : movimentacaoJpa.findByPeriodoObrigatorio(
+            null, MovimentacaoEstoque.Tipo.SAIDA, dataInicio, dataFim, unidadeSaudeId)) {
             consumos.merge(movimentacao.getMedicamento().getId(), (double) movimentacao.getQuantidade(), Double::sum);
         }
         return consumos;

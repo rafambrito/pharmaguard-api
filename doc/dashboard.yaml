@@ -1,0 +1,341 @@
+openapi: 3.0.3
+info:
+  title: PharmaGuard API - Modulo Dashboard
+  version: "1.0.0"
+  description: Contrato OpenAPI para consulta consolidada de indicadores da tela inicial
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /api/v1/dashboard/overview:
+    get:
+      tags:
+        - Dashboard
+      summary: Consultar visao geral do dashboard
+      operationId: consultarDashboardOverview
+      parameters:
+        - $ref: "#/components/parameters/periodoInicio"
+        - $ref: "#/components/parameters/periodoFim"
+        - $ref: "#/components/parameters/medicamentoId"
+        - $ref: "#/components/parameters/categoriaId"
+        - $ref: "#/components/parameters/unidadeMedidaId"
+        - $ref: "#/components/parameters/fornecedorId"
+        - $ref: "#/components/parameters/unidadeSaudeId"
+      responses:
+        "200":
+          description: Visao geral do dashboard retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardOverviewResponse"
+        "400":
+          description: Parametros invalidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "401":
+          description: Nao autenticado
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+components:
+  parameters:
+    periodoInicio:
+      name: periodoInicio
+      in: query
+      required: true
+      description: Data inicial do periodo de analise.
+      schema:
+        type: string
+        format: date
+        example: "2026-08-06"
+
+    periodoFim:
+      name: periodoFim
+      in: query
+      required: true
+      description: Data final do periodo de analise.
+      schema:
+        type: string
+        format: date
+        example: "2026-09-05"
+
+    medicamentoId:
+      name: medicamentoId
+      in: query
+      required: false
+      description: Codigo do medicamento para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 9001
+
+    categoriaId:
+      name: categoriaId
+      in: query
+      required: false
+      description: Codigo da categoria para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 9001
+
+    unidadeMedidaId:
+      name: unidadeMedidaId
+      in: query
+      required: false
+      description: Codigo da unidade de medida para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 9001
+
+    fornecedorId:
+      name: fornecedorId
+      in: query
+      required: false
+      description: Codigo do fornecedor para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 9001
+
+    unidadeSaudeId:
+      name: unidadeSaudeId
+      in: query
+      required: false
+      description: Codigo da unidade de saude para filtrar a consulta.
+      schema:
+        type: integer
+        format: int64
+        example: 9001
+
+  schemas:
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    ValidationProblemDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemDetail"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/FieldError"
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+
+    DashboardOverviewResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        metricas:
+          $ref: "#/components/schemas/MetricasMotorEstatisticoResponse"
+        resumoAlertas:
+          $ref: "#/components/schemas/ResumoAlertas"
+        alertas:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlertaItem"
+        unidades:
+          type: array
+          items:
+            $ref: "#/components/schemas/DashboardUnidadeResumo"
+        reposicoes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReposicaoItem"
+        consumo:
+          $ref: "#/components/schemas/DashboardConsumoResumo"
+
+    MetricasMotorEstatisticoResponse:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        totalMedicamentosAnalisados:
+          type: integer
+        totalItensComReposicaoSugerida:
+          type: integer
+        totalItensComRiscoRuptura:
+          type: integer
+        totalItensComRiscoValidade:
+          type: integer
+        totalConsumoPeriodo:
+          type: number
+          format: double
+        coberturaMediaDias:
+          type: number
+          format: double
+        integracaoSchedulerPreparada:
+          type: boolean
+        integracaoDashboardPreparada:
+          type: boolean
+        atualizadoEm:
+          type: string
+          format: date-time
+
+    ResumoAlertas:
+      type: object
+      properties:
+        totalRuptura:
+          type: integer
+        totalVencimento:
+          type: integer
+        totalExcessoEstoque:
+          type: integer
+        totalConsumoPeriodo:
+          type: number
+          format: double
+        totalItensCriticos:
+          type: integer
+
+    AlertaItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        tipo:
+          type: string
+          enum:
+            - RUPTURA
+            - VENCIMENTO
+            - EXCESSO_ESTOQUE
+        severidade:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+            - CRITICA
+        quantidadeImpactada:
+          type: integer
+        descricao:
+          type: string
+
+    DashboardUnidadeResumo:
+      type: object
+      properties:
+        unidadeSaudeId:
+          type: integer
+          format: int64
+          nullable: true
+        nomeUnidadeSaude:
+          type: string
+          nullable: true
+        itensCriticos:
+          type: integer
+        lotesAVencer:
+          type: integer
+
+    ReposicaoItem:
+      type: object
+      properties:
+        medicamentoId:
+          type: integer
+          format: int64
+        nomeMedicamento:
+          type: string
+        quantidadeSugerida:
+          type: integer
+        urgencia:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+            - CRITICA
+        prioridade:
+          type: string
+          enum:
+            - BAIXA
+            - MEDIA
+            - ALTA
+        fornecedorId:
+          type: integer
+          format: int64
+          nullable: true
+        leadTimeDias:
+          type: integer
+          nullable: true
+        justificativa:
+          type: string
+
+    DashboardConsumoResumo:
+      type: object
+      properties:
+        totalConsumido:
+          type: number
+          format: double
+        mediaDiaria:
+          type: number
+          format: double
+        tendencia:
+          type: string
+          enum:
+            - CRESCENTE
+            - ESTAVEL
+            - DECRESCENTE
+        pontos:
+          type: array
+          items:
+            $ref: "#/components/schemas/DashboardConsumoPonto"
+
+    DashboardConsumoPonto:
+      type: object
+      properties:
+        periodoInicio:
+          type: string
+          format: date
+        periodoFim:
+          type: string
+          format: date
+        label:
+          type: string
+        totalConsumido:
+          type: number
+          format: double

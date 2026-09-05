@@ -1,6 +1,5 @@
 package com.pharmaguard.api.reports.adapters.out.repository;
 
-import com.pharmaguard.api.inventory.adapters.out.repository.MedicamentoJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.MovimentacaoEstoqueJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.entity.CategoriaEntity;
 import com.pharmaguard.api.inventory.adapters.out.repository.entity.LoteEntity;
@@ -14,16 +13,17 @@ import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
 import com.pharmaguard.api.reports.application.FiltroConsumo;
 import com.pharmaguard.api.reports.application.RelatorioConsumoUseCase;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(MovimentacaoEstoqueJpaRepository.class)
+@Primary
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class RelatorioConsumoJpaAdapter implements RelatorioConsumoUseCase.RelatorioConsumoRepositoryPort {
 
     private final MovimentacaoEstoqueJpaRepository movimentacaoJpa;
@@ -37,9 +37,8 @@ public class RelatorioConsumoJpaAdapter implements RelatorioConsumoUseCase.Relat
         LocalDateTime inicio = filtro.periodoInicio() == null ? null : filtro.periodoInicio().atStartOfDay();
         LocalDateTime fim = filtro.periodoFim() == null ? null : filtro.periodoFim().atTime(LocalTime.MAX);
 
-        return movimentacaoJpa.findByFiltros(
+        return movimentacaoJpa.findByPeriodoObrigatorio(
                         filtro.medicamentoId(),
-                        null,
                         MovimentacaoEstoque.Tipo.SAIDA,
                         inicio,
                         fim,

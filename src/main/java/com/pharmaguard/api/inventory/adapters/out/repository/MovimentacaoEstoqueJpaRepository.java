@@ -28,4 +28,20 @@ public interface MovimentacaoEstoqueJpaRepository extends JpaRepository<Moviment
             @Param("dataInicial") LocalDateTime dataInicial,
             @Param("dataFinal") LocalDateTime dataFinal,
             @Param("unidadeId") Long unidadeId);
+
+    @Query("""
+            select m
+            from MovimentacaoEstoqueEntity m
+            where (:medicamentoId is null or m.medicamento.id = :medicamentoId)
+              and (:tipo is null or m.tipo = :tipo)
+              and (:unidadeId is null or m.unidadeSaude.id = :unidadeId)
+              and m.dataMovimentacao >= :dataInicial
+              and m.dataMovimentacao <= :dataFinal
+            order by m.dataMovimentacao desc
+            """)
+    List<MovimentacaoEstoqueEntity> findByPeriodoObrigatorio(@Param("medicamentoId") Long medicamentoId,
+            @Param("tipo") MovimentacaoEstoque.Tipo tipo,
+            @Param("dataInicial") LocalDateTime dataInicial,
+            @Param("dataFinal") LocalDateTime dataFinal,
+            @Param("unidadeId") Long unidadeId);
 }
