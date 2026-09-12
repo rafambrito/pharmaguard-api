@@ -5,11 +5,11 @@ import com.pharmaguard.api.inventory.application.UnidadeSaudeUseCase.UnidadeSaud
 import com.pharmaguard.api.inventory.domain.UnidadeSaude;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(UnidadeSaudeJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class UnidadeSaudeJpaAdapter implements UnidadeSaudeRepositoryPort {
     private final UnidadeSaudeJpaRepository jpa;
     public UnidadeSaudeJpaAdapter(UnidadeSaudeJpaRepository jpa) { this.jpa = jpa; }

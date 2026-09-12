@@ -9,11 +9,11 @@ import com.pharmaguard.api.inventory.adapters.out.repository.entity.MedicamentoE
 import com.pharmaguard.api.inventory.adapters.out.repository.entity.UnidadeMedidaEntity;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(MedicamentoJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class MedicamentoJpaAdapter implements MedicamentoRepositoryPort {
 
     private final MedicamentoJpaRepository medicamentoJpa;

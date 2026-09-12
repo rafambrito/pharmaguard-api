@@ -31,8 +31,26 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pharmaguard
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
+      INTELLIGENCE_ENABLED: "true"
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8080:8080"
+
+  pharmaguard-ui:
+    build:
+      context: ../pharmaguard-ui
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    image: pharmaguard-ui/app:latest
+    container_name: pharmaguard-ui
+    restart: always
+    depends_on:
+      - pharmaguard-api
+    ports:
+      - "8081:80"
 
 volumes:
   postgres_data:

@@ -10,14 +10,14 @@ import com.pharmaguard.api.inventory.domain.Categoria;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.SaldoLoteEstoque;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@ConditionalOnBean({SaldoLoteEstoqueJpaRepository.class, UnidadeSaudeJpaRepository.class})
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class SaldoEstoqueJpaAdapter implements SaldoEstoqueRepositoryPort {
 
     private final MedicamentoJpaRepository medicamentoJpa;

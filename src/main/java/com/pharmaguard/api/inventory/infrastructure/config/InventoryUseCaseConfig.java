@@ -1,6 +1,7 @@
 package com.pharmaguard.api.inventory.infrastructure.config;
 
 import com.pharmaguard.api.inventory.adapters.out.repository.CategoriaJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.EntradaEstoqueJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryEntradaEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryCategoriaRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryHistoricoEstoqueRepositoryAdapter;
@@ -11,6 +12,13 @@ import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaidaEstoqu
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaldoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeSaudeRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.LoteJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.MedicamentoJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.MovimentacaoEstoqueJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.SaidaEstoqueJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.SaldoLoteEstoqueJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.UnidadeMedidaJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.UnidadeSaudeJpaRepository;
 import com.pharmaguard.api.inventory.application.CategoriaUseCase;
 import com.pharmaguard.api.inventory.application.CategoriaUseCaseImpl;
 import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCase;
@@ -30,6 +38,7 @@ import com.pharmaguard.api.inventory.application.UnidadeMedidaUseCaseImpl;
 import com.pharmaguard.api.inventory.application.UnidadeSaudeUseCase;
 import com.pharmaguard.api.inventory.application.UnidadeSaudeUseCaseImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,64 +46,72 @@ import org.springframework.context.annotation.Configuration;
 public class InventoryUseCaseConfig {
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
     public InMemoryInventoryStore inMemoryInventoryStore() {
         return new InMemoryInventoryStore();
     }
 
     @Bean
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
     @ConditionalOnMissingBean(CategoriaJpaRepository.class)
     public CategoriaUseCase.CategoriaRepositoryPort inMemoryCategoriaRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryCategoriaRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(UnidadeMedidaJpaRepository.class)
     public UnidadeMedidaUseCase.UnidadeMedidaRepositoryPort inMemoryUnidadeMedidaRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryUnidadeMedidaRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(UnidadeSaudeJpaRepository.class)
     public UnidadeSaudeUseCase.UnidadeSaudeRepositoryPort inMemoryUnidadeSaudeRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryUnidadeSaudeRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(MedicamentoJpaRepository.class)
     public MedicamentoUseCase.MedicamentoRepositoryPort inMemoryMedicamentoRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryMedicamentoRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(LoteJpaRepository.class)
     public LoteUseCase.LoteRepositoryPort inMemoryLoteRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryLoteRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(EntradaEstoqueJpaRepository.class)
     public EntradaEstoqueUseCase.EntradaEstoqueRepositoryPort inMemoryEntradaEstoqueRepositoryPort(
             InMemoryInventoryStore store) {
         return new InMemoryEntradaEstoqueRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(SaidaEstoqueJpaRepository.class)
     public SaidaEstoqueUseCase.SaidaEstoqueRepositoryPort inMemorySaidaEstoqueRepositoryPort(
             InMemoryInventoryStore store) {
         return new InMemorySaidaEstoqueRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(SaldoLoteEstoqueJpaRepository.class)
     public SaldoEstoqueUseCase.SaldoEstoqueRepositoryPort inMemorySaldoEstoqueRepositoryPort(
             InMemoryInventoryStore store) {
         return new InMemorySaldoEstoqueRepositoryAdapter(store);
     }
 
     @Bean
-    @ConditionalOnMissingBean(CategoriaJpaRepository.class)
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(MovimentacaoEstoqueJpaRepository.class)
     public HistoricoEstoqueUseCase.HistoricoEstoqueRepositoryPort inMemoryHistoricoEstoqueRepositoryPort(
             InMemoryInventoryStore store) {
         return new InMemoryHistoricoEstoqueRepositoryAdapter(store);

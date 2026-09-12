@@ -11,11 +11,11 @@ import com.pharmaguard.api.inventory.adapters.out.repository.entity.MedicamentoE
 import com.pharmaguard.api.inventory.adapters.out.repository.entity.UnidadeMedidaEntity;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(LoteJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class LoteJpaAdapter implements LoteRepositoryPort {
 
     private final LoteJpaRepository loteJpa;

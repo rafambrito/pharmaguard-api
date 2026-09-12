@@ -11,7 +11,7 @@ import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@ConditionalOnBean(MovimentacaoEstoqueJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class HistoricoEstoqueJpaAdapter implements HistoricoEstoqueRepositoryPort {
 
     private final MovimentacaoEstoqueJpaRepository movimentacaoJpa;
