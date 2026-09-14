@@ -17,7 +17,7 @@ public class OllamaHealthIndicator implements HealthIndicator {
     public OllamaHealthIndicator(
             @Value("${intelligence.enabled:true}") boolean enabled,
             @Value("${ollama.base-url:http://localhost:11434}") String baseUrl,
-            @Value("${ollama.model:moondream}") String model) {
+            @Value("${ollama.model:gemma3:4b}") String model) {
         this.enabled = enabled;
         this.baseUrl = baseUrl;
         this.model = model;

@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 				+ "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration,"
 				+ "org.springframework.boot.orm.jpa.autoconfigure.HibernateJpaAutoConfiguration,"
 				+ "org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration",
-		"app.use-in-memory-inventory=true",
 		"management.endpoint.health.group.readiness.include=readinessState"
 })
 class PharmaguardApiApplicationTests {

@@ -1,6 +1,5 @@
 package com.pharmaguard.api.intelligence.infrastructure.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pharmaguard.api.intelligence.adapters.out.ollama.OllamaInsightAdapter;
 import com.pharmaguard.api.intelligence.adapters.out.ollama.ResilientGeradorInsightAdapter;
 import com.pharmaguard.api.intelligence.application.ExplicarPainelUseCase;
@@ -23,6 +22,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 public class IntelligenceConfig {
@@ -31,7 +31,7 @@ public class IntelligenceConfig {
     @ConditionalOnProperty(name = "intelligence.enabled", havingValue = "true")
     public GeradorInsightPort ollamaInsightPort(
             @Value("${ollama.base-url:http://localhost:11434}") String baseUrl,
-            @Value("${ollama.model:moondream}") String model,
+            @Value("${ollama.model:gemma3:4b}") String model,
             @Value("${resilience.retry.intelligence.max-attempts:2}") int maxAttempts,
             @Value("${resilience.retry.intelligence.backoff:200ms}") Duration backoff,
             @Value("${resilience.circuit-breaker.intelligence.failure-threshold:2}") int failureThreshold,
@@ -65,7 +65,8 @@ public class IntelligenceConfig {
     @Bean
     public ExplicarPainelUseCase explicarPainelUseCase(
             DashboardOverviewUseCase dashboardOverviewUseCase,
-            GeradorInsightPort geradorInsightPort) {
-        return new ExplicarPainelUseCaseImpl(dashboardOverviewUseCase, geradorInsightPort, new ObjectMapper());
+            GeradorInsightPort geradorInsightPort,
+            ObjectMapper objectMapper) {
+        return new ExplicarPainelUseCaseImpl(dashboardOverviewUseCase, geradorInsightPort, objectMapper);
     }
 }
