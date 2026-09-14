@@ -133,9 +133,10 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
 
     private SaldoLoteEstoqueEntity criarSaldoInicial(LoteEntity lote, Long unidadeId) {
         SaldoLoteEstoqueEntity saldo = new SaldoLoteEstoqueEntity();
+        saldo.setLoteId(lote.getId());
         saldo.setLote(lote);
         saldo.setUnidadeSaudeId(unidadeId);
-        saldo.setQuantidadeDisponivel(lote.getQuantidadeInicial());
+        saldo.setQuantidadeDisponivel(0);
         saldo.setDataUltimaMovimentacao(LocalDateTime.now());
         return saldo;
     }

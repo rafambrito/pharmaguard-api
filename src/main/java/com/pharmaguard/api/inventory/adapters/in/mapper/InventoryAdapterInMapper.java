@@ -200,6 +200,7 @@ public class InventoryAdapterInMapper {
                 movimentacao.getUnidadeSaude() == null ? null : movimentacao.getUnidadeSaude().getId(),
                 movimentacao.getMedicamento().getId(),
                 movimentacao.getLote() == null ? null : movimentacao.getLote().getId(),
+                movimentacao.getLote() == null ? null : movimentacao.getLote().getNumeroLote(),
                 movimentacao.getQuantidade(),
                 movimentacao.getSaldoAposMovimentacao(),
                 movimentacao.getMotivo(),

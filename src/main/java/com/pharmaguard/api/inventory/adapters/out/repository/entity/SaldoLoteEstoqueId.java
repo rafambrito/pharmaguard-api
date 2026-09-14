@@ -16,6 +16,22 @@ public class SaldoLoteEstoqueId implements Serializable {
         this.unidadeSaudeId = unidadeSaudeId;
     }
 
+    public Long getLoteId() {
+        return loteId;
+    }
+
+    public void setLoteId(Long loteId) {
+        this.loteId = loteId;
+    }
+
+    public Long getUnidadeSaudeId() {
+        return unidadeSaudeId;
+    }
+
+    public void setUnidadeSaudeId(Long unidadeSaudeId) {
+        this.unidadeSaudeId = unidadeSaudeId;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;

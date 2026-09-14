@@ -31,7 +31,7 @@ public class IntelligenceConfig {
     @ConditionalOnProperty(name = "intelligence.enabled", havingValue = "true")
     public GeradorInsightPort ollamaInsightPort(
             @Value("${ollama.base-url:http://localhost:11434}") String baseUrl,
-            @Value("${ollama.model:gemma3:4b}") String model,
+            @Value("${ollama.model:moondream}") String model,
             @Value("${resilience.retry.intelligence.max-attempts:2}") int maxAttempts,
             @Value("${resilience.retry.intelligence.backoff:200ms}") Duration backoff,
             @Value("${resilience.circuit-breaker.intelligence.failure-threshold:2}") int failureThreshold,

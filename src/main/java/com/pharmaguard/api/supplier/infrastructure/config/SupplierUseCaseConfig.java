@@ -1,6 +1,5 @@
 package com.pharmaguard.api.supplier.infrastructure.config;
 
-import com.pharmaguard.api.supplier.adapters.out.repository.FornecedorJpaRepository;
 import com.pharmaguard.api.supplier.adapters.out.repository.InMemorySupplierRepositoryAdapter;
 import com.pharmaguard.api.supplier.application.ContatoFornecedorUseCase;
 import com.pharmaguard.api.supplier.application.ContatoFornecedorUseCaseImpl;
@@ -8,15 +7,17 @@ import com.pharmaguard.api.supplier.application.FornecedorUseCase;
 import com.pharmaguard.api.supplier.application.FornecedorUseCaseImpl;
 import com.pharmaguard.api.supplier.application.LeadTimeFornecedorUseCase;
 import com.pharmaguard.api.supplier.application.LeadTimeFornecedorUseCaseImpl;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SupplierUseCaseConfig {
 
+    // ConditionalOnMissingBean(FornecedorJpaRepository) is unreliable here because this
+    // @Configuration is processed before JPA repository beans are registered by auto-configuration.
     @Bean
-    @ConditionalOnMissingBean(FornecedorJpaRepository.class)
+    @ConditionalOnProperty(name = "spring.datasource.url", havingValue = "never-set", matchIfMissing = true)
     public InMemorySupplierRepositoryAdapter inMemorySupplierRepositoryAdapter() {
         return new InMemorySupplierRepositoryAdapter();
     }

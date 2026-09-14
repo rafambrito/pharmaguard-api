@@ -18,6 +18,7 @@ import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCase;
 import com.pharmaguard.api.inventory.domain.Categoria;
 import com.pharmaguard.api.inventory.domain.EntradaEstoque;
 import com.pharmaguard.api.inventory.domain.EstoqueAtual;
+import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.SaldoLoteEstoque;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
@@ -37,13 +38,14 @@ class EstoqueControllerIntegrationTest {
     private MockMvc mockMvc;
     private EntradaEstoqueUseCase entradaUseCase;
     private SaldoEstoqueUseCase saldoUseCase;
+    private HistoricoEstoqueUseCase historicoUseCase;
 
     @BeforeEach
     void setUp() {
         entradaUseCase = org.mockito.Mockito.mock(EntradaEstoqueUseCase.class);
         SaidaEstoqueUseCase saidaUseCase = org.mockito.Mockito.mock(SaidaEstoqueUseCase.class);
         saldoUseCase = org.mockito.Mockito.mock(SaldoEstoqueUseCase.class);
-        HistoricoEstoqueUseCase historicoUseCase = org.mockito.Mockito.mock(HistoricoEstoqueUseCase.class);
+        historicoUseCase = org.mockito.Mockito.mock(HistoricoEstoqueUseCase.class);
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("message");
@@ -123,6 +125,36 @@ class EstoqueControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Requisicao invalida. Verifique os campos informados.")))
                 .andExpect(jsonPath("$.errors").isArray());
+    }
+
+    @Test
+    void deveListarMovimentacoesComSucesso() throws Exception {
+        com.pharmaguard.api.inventory.domain.MovimentacaoEstoque mov = new com.pharmaguard.api.inventory.domain.MovimentacaoEstoque();
+        mov.setId(10L);
+        mov.setTipo(com.pharmaguard.api.inventory.domain.MovimentacaoEstoque.Tipo.ENTRADA);
+        mov.setMedicamento(medicamento(9001L));
+        mov.setUnidadeSaude(new com.pharmaguard.api.inventory.domain.UnidadeSaude(9001L));
+        Lote lote = new Lote();
+        lote.setId(8001L);
+        lote.setNumeroLote("LOTE-8001");
+        mov.setLote(lote);
+        mov.setQuantidade(50);
+        mov.setSaldoAposMovimentacao(50);
+        mov.setMotivo("ENTRADA");
+        mov.setDataMovimentacao(java.time.LocalDateTime.now());
+
+        when(historicoUseCase.listar(eq(9001L), eq(9001L), eq(null), eq(null), eq(null), eq(null)))
+                .thenReturn(List.of(mov));
+
+        mockMvc.perform(get("/api/v1/estoque/movimentacoes")
+                        .param("unidadeId", "9001")
+                        .param("medicamentoId", "9001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(10)))
+                .andExpect(jsonPath("$[0].medicamentoId", is(9001)))
+                .andExpect(jsonPath("$[0].unidadeId", is(9001)))
+                .andExpect(jsonPath("$[0].numeroLote", is("LOTE-8001")))
+                .andExpect(jsonPath("$[0].quantidade", is(50)));
     }
 
     private Medicamento medicamento(Long id) {

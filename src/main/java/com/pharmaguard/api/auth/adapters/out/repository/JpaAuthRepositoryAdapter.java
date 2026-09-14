@@ -8,11 +8,11 @@ import com.pharmaguard.api.auth.domain.Usuario;
 import com.pharmaguard.api.auth.adapters.out.repository.entity.UsuarioEntity;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(UsuarioJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class JpaAuthRepositoryAdapter implements UsuarioUseCase.UsuarioRepositoryPort,
         AutenticarUsuarioUseCase.UsuarioRepositoryPort,
         RenovarSessaoUseCase.RefreshTokenRepositoryPort {

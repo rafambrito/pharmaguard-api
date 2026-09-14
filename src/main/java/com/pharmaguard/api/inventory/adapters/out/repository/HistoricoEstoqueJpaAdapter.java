@@ -70,6 +70,8 @@ public class HistoricoEstoqueJpaAdapter implements HistoricoEstoqueRepositoryPor
         if (entity.getLote() != null) {
             movimentacao.setLote(loteToDomain(entity.getLote()));
         }
+        movimentacao.setUnidadeSaude(
+            new com.pharmaguard.api.inventory.domain.UnidadeSaude(entity.getUnidadeSaude().getId()));
         movimentacao.setQuantidade(entity.getQuantidade());
         movimentacao.setSaldoAposMovimentacao(entity.getSaldoAposMovimentacao());
         movimentacao.setDataMovimentacao(entity.getDataMovimentacao());

@@ -9,11 +9,11 @@ import com.pharmaguard.api.supplier.adapters.out.repository.entity.ContatoFornec
 import com.pharmaguard.api.supplier.adapters.out.repository.entity.FornecedorEntity;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnBean(FornecedorJpaRepository.class)
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class SupplierJpaAdapter implements
         FornecedorUseCase.FornecedorRepositoryPort,
         ContatoFornecedorUseCase.ContatoFornecedorRepositoryPort,

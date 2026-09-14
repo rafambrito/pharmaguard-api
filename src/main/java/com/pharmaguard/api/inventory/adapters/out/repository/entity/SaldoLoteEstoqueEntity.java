@@ -6,10 +6,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import com.pharmaguard.api.inventory.adapters.out.repository.entity.SaldoLoteEstoqueId;
 
 import java.time.LocalDateTime;
 
@@ -26,9 +24,8 @@ public class SaldoLoteEstoqueEntity {
     @Column(name = "unidade_saude_id")
     private Long unidadeSaudeId;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "lote_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lote_id", insertable = false, updatable = false)
     private LoteEntity lote;
 
     @Column(name = "quantidade_disponivel", nullable = false)

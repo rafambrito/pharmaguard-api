@@ -2,7 +2,6 @@ package com.pharmaguard.api.auth.infrastructure.config;
 
 import com.pharmaguard.api.auth.adapters.out.audit.Slf4jAuthAuditService;
 import com.pharmaguard.api.auth.adapters.out.repository.InMemoryAuthRepositoryAdapter;
-import com.pharmaguard.api.auth.adapters.out.repository.UsuarioJpaRepository;
 import com.pharmaguard.api.auth.application.AuthAuditService;
 import com.pharmaguard.api.auth.application.AutenticarUsuarioUseCase;
 import com.pharmaguard.api.auth.application.AutenticarUsuarioUseCaseImpl;
@@ -12,7 +11,7 @@ import com.pharmaguard.api.auth.application.RenovarSessaoUseCase;
 import com.pharmaguard.api.auth.application.RenovarSessaoUseCaseImpl;
 import com.pharmaguard.api.auth.application.UsuarioUseCase;
 import com.pharmaguard.api.auth.application.UsuarioUseCaseImpl;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,8 +19,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class UseCaseConfig {
 
+    // ConditionalOnMissingBean(UsuarioJpaRepository) is unreliable here because this
+    // @Configuration is processed before JPA repository beans are registered by auto-configuration.
     @Bean
-    @ConditionalOnMissingBean(UsuarioJpaRepository.class)
+    @ConditionalOnProperty(name = "spring.datasource.url", havingValue = "never-set", matchIfMissing = true)
     public InMemoryAuthRepositoryAdapter inMemoryAuthRepositoryAdapter() {
         return new InMemoryAuthRepositoryAdapter();
     }

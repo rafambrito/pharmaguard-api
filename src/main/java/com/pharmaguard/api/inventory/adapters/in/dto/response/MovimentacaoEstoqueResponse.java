@@ -9,6 +9,7 @@ public record MovimentacaoEstoqueResponse(
         Long unidadeId,
         Long medicamentoId,
         Long loteId,
+        String numeroLote,
         Integer quantidade,
         Integer saldoAposMovimentacao,
         String motivo,

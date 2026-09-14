@@ -9,6 +9,7 @@ import com.pharmaguard.api.inventory.adapters.in.dto.response.SaidaEstoqueRespon
 import com.pharmaguard.api.inventory.adapters.in.dto.response.SaldoEstoqueResponse;
 import com.pharmaguard.api.inventory.adapters.in.dto.response.SaldoLoteResponse;
 import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
+import com.pharmaguard.api.shared.config.MessageKeys;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +42,9 @@ public interface EstoqueControllerDoc {
             @ApiResponse(responseCode = "200", description = "Lista de entradas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EntradaEstoqueResponse.class)))
     })
     ResponseEntity<List<EntradaEstoqueResponse>> listarEntradas(
-            @Parameter(description = "Id do medicamento") Long medicamentoId,
-            @Parameter(description = "Id do lote") Long loteId,
-            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
+            @Parameter(description = "Id do medicamento") @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @Parameter(description = "Id do lote") @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long loteId,
+            @Parameter(description = "Id da unidade de saude", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId);
 
     @Operation(summary = "Buscar entrada por id")
     @ApiResponses(value = {
@@ -50,7 +52,7 @@ public interface EstoqueControllerDoc {
             @ApiResponse(responseCode = "404", description = "Entrada nao encontrada")
     })
     ResponseEntity<EntradaEstoqueResponse> buscarEntrada(
-            @Parameter(description = "Id da entrada", required = true) Long id);
+            @Parameter(description = "Id da entrada", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long id);
 
     @Operation(summary = "Registrar saida de estoque", description = "Registra uma saida aplicando a regra FEFO")
     @ApiResponses(value = {
@@ -64,8 +66,8 @@ public interface EstoqueControllerDoc {
 
     @Operation(summary = "Listar saidas de estoque")
     ResponseEntity<List<SaidaEstoqueResponse>> listarSaidas(
-            @Parameter(description = "Id do medicamento") Long medicamentoId,
-            @Parameter(description = "Id da unidade de saude") Long unidadeId);
+            @Parameter(description = "Id do medicamento") @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId);
 
     @Operation(summary = "Buscar saida por id")
     @ApiResponses(value = {
@@ -73,16 +75,16 @@ public interface EstoqueControllerDoc {
             @ApiResponse(responseCode = "404", description = "Saida nao encontrada")
     })
     ResponseEntity<SaidaEstoqueResponse> buscarSaida(
-            @Parameter(description = "Id da saida", required = true) Long id);
+            @Parameter(description = "Id da saida", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long id);
 
     @Operation(summary = "Listar movimentacoes de estoque")
     ResponseEntity<List<MovimentacaoEstoqueResponse>> listarMovimentacoes(
-            @Parameter(description = "Id do medicamento") Long medicamentoId,
-            @Parameter(description = "Id do lote") Long loteId,
+            @Parameter(description = "Id do medicamento") @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @Parameter(description = "Id do lote") @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long loteId,
             @Parameter(description = "Tipo da movimentacao") MovimentacaoEstoque.Tipo tipo,
             @Parameter(description = "Data inicial") LocalDate dataInicial,
             @Parameter(description = "Data final") LocalDate dataFinal,
-            @Parameter(description = "Id da unidade de saude") Long unidadeId);
+            @Parameter(description = "Id da unidade de saude", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId);
 
     @Operation(summary = "Consultar saldo por medicamento")
     @ApiResponses(value = {
@@ -90,15 +92,15 @@ public interface EstoqueControllerDoc {
             @ApiResponse(responseCode = "404", description = "Medicamento nao encontrado")
     })
     ResponseEntity<SaldoEstoqueResponse> consultarSaldo(
-            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId,
-            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
+            @Parameter(description = "Id do medicamento", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId);
 
     @Operation(summary = "Consultar saldo por lote do medicamento")
     ResponseEntity<List<SaldoLoteResponse>> consultarSaldoPorLote(
-            @Parameter(description = "Id do medicamento", required = true) Long medicamentoId,
-            @Parameter(description = "Id da unidade de saude", required = true) Long unidadeId);
+            @Parameter(description = "Id do medicamento", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long medicamentoId,
+            @Parameter(description = "Id da unidade de saude", required = true) @Positive(message = MessageKeys.MSG_VALIDACAO_ID_POSITIVO) Long unidadeId);
 
     @Operation(summary = "Listar lotes vencidos e proximos do vencimento")
     ResponseEntity<List<LoteVencimentoResponse>> listarVencimentos(
-            @Parameter(description = "Quantidade de dias para considerar proximo do vencimento") int diasParaVencer);
+            @Parameter(description = "Quantidade de dias para considerar proximo do vencimento") @Positive(message = MessageKeys.MSG_VALIDACAO_QUANTIDADE_MINIMA) int diasParaVencer);
 }

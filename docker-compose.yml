@@ -33,6 +33,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: admin
       INTELLIGENCE_ENABLED: "true"
       OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: moondream
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
