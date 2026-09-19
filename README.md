@@ -2,7 +2,7 @@
 
 > **Gestão inteligente de estoque farmacêutico para reduzir desperdícios, prevenir rupturas e apoiar decisões na saúde pública.**
 
-![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-MVP%20Entregue-success?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-A_Definir-lightgrey?style=for-the-badge)
 
 ---
@@ -130,6 +130,13 @@ com.pharmaguard.api
 │   ├── domain
 │   └── infrastructure
 │
+├── intelligence
+│   ├── adpaters
+│   │   └── out/ollama
+│   ├── application
+│   ├── domain
+│   └── infrastructure
+│
 ├── scheduler
 │   ├── application
 │   └── infrastructure
@@ -201,7 +208,7 @@ O principal diferencial do PharmaGuard está no **Inventory Intelligence Engine*
 
 ### 📊 Indicadores
 
-O motor poderá produzir informações como:
+O motor produz informações como:
 
 - 📈 consumo médio;
 - 📐 desvio padrão;
@@ -212,6 +219,35 @@ O motor poderá produzir informações como:
 - 🔄 recomendação de reposição;
 - 💰 estoque em risco de perda;
 - 🏥 criticidade do medicamento.
+
+### 🤖 Diagnóstico assistido por IA (Ollama)
+
+Além do motor estatístico determinístico, o módulo **`intelligence`** interpreta os indicadores calculados e gera um diagnóstico textual em linguagem natural, sem substituir as regras de negócio:
+
+```text
+Indicadores do motor estatístico
+                │
+                ▼
+       Prompt estruturado
+                │
+                ▼
+     GeradorInsightPort (hexagonal)
+                │
+                ▼
+   Ollama (LLM local, modelo gemma3:4b)
+                │
+                ▼
+     Explicação em linguagem natural
+                │
+                ▼
+              PharmaGuard UI
+```
+
+- Execução local via **Ollama**, sem custo por token e sem envio de dados a serviços externos.
+- Modelo configurável por variável de ambiente (`OLLAMA_MODEL`, padrão `gemma3:4b`).
+- Chamada ao modelo protegida pelos padrões de resiliência do próprio projeto: **retry**, **circuit breaker**, **timeout** e **bulkhead**, evitando que uma falha ou lentidão do Ollama impacte o restante da API.
+- Quando a IA está desabilitada (`intelligence.enabled=false`) ou indisponível, um `GeradorInsightPort` de fallback determinístico assume a geração do resumo, garantindo que a `pharmaguard-ui` sempre receba uma resposta.
+- Health check dedicado (`OllamaHealthIndicator`) reporta a disponibilidade do modelo no endpoint de *actuator health*.
 
 ---
 
@@ -318,10 +354,21 @@ Os alertas poderão considerar:
 
 <p>
 <img src="https://img.shields.io/badge/Vue.js-3-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Vue 3" />
-<img src="https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap" />
+<img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+<img src="https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+<img src="https://img.shields.io/badge/Pinia-State-FFD859?style=for-the-badge&logo=pinia&logoColor=black" alt="Pinia" />
 </p>
 
-> O frontend será desenvolvido após a conclusão do MVP do backend.
+> MVP entregue em [`pharmaguard-ui`](../pharmaguard-ui), consumindo esta API via REST/JWT. Consulte o README daquele projeto para detalhes de módulos e telas.
+
+## Inteligência Artificial
+
+<p>
+<img src="https://img.shields.io/badge/Ollama-Local_LLM-000000?style=for-the-badge&logo=ollama&logoColor=white" alt="Ollama" />
+<img src="https://img.shields.io/badge/Modelo-gemma3:4b-4B32C3?style=for-the-badge" alt="gemma3:4b" />
+</p>
+
+> Motor de IA local via [Ollama](https://ollama.com), sem dependência de provedores externos pagos. Modelo configurável por variável de ambiente (`OLLAMA_MODEL`, padrão `gemma3:4b`).
 
 ## Qualidade e observabilidade
 
@@ -418,6 +465,7 @@ A arquitetura prevê separação entre:
 - Risco de ruptura
 - Risco de desperdício
 - Recomendações de reposição
+- Diagnóstico assistido por IA local (Ollama) com fallback determinístico
 
 ### 📊 Relatórios
 
@@ -532,6 +580,15 @@ Prioridades:
 docker compose up -d
 ```
 
+O `docker-compose.yml` já sobe o Ollama (`OLLAMA_BASE_URL`, `OLLAMA_MODEL=llama3.2:1b`) para o diagnóstico assistido por IA. Para rodar o modelo padrão da aplicação localmente:
+
+```bash
+ollama pull gemma3:4b
+ollama serve
+```
+
+Caso o Ollama não esteja disponível, defina `intelligence.enabled=false` (ou a variável correspondente) para que o fallback determinístico assuma a geração dos diagnósticos.
+
 ## Executando a aplicação
 
 ```bash
@@ -554,6 +611,7 @@ pharmaguard-api/
 │   │   │   ├── inventory/
 │   │   │   ├── supplier/
 │   │   │   ├── analytics/
+│   │   │   ├── intelligence/
 │   │   │   ├── scheduler/
 │   │   │   ├── reports/
 │   │   │   └── shared/
@@ -628,6 +686,21 @@ Possíveis evoluções:
 - 📈 dashboards avançados.
 
 A evolução para microsserviços não faz parte do MVP. A prioridade é entregar um **monólito modular coeso, testável e bem estruturado**.
+
+### 📡 Integrações com sistemas externos (demonstradas via mock na `pharmaguard-ui`)
+
+O módulo **Integrações** da `pharmaguard-ui` já apresenta, de forma mockada, o próximo passo natural de evolução da API: expor os dados de estoque e receber dados regulatórios de sistemas federais. As integrações candidatas para implementação real são:
+
+- **BNAFAR** — transmissão automatizada de posição de estoque, entradas, saídas e perdas de medicamentos para a Base Nacional de Dados da Assistência Farmacêutica, via web services (REST/SOAP) ou barramento do e-SUS, eliminando a digitação manual de relatórios federais.
+- **CATMAT / TUSS** — consumo dos catálogos nacionais (CATMAT do Governo Federal e TUSS), padronizando a codificação de medicamentos e insumos conforme a RENAME e evitando duplicidade de cadastros.
+- **RNDS (Rede Nacional de Dados em Saúde)** — conectividade com a plataforma do Ministério da Saúde para interoperabilidade de prontuários, vinculando a dispensação efetuada no PharmaGuard ao histórico de saúde do cidadão via CPF ou Cartão Nacional de Saúde (CNS).
+- **ANVISA — Registros e Lotes** — consulta automatizada ao banco de dados da ANVISA para validação de registros de medicamentos, alertas de recolhimento preventivo (recall) e verificação de prazos de validade regulatórios na entrada das notas fiscais.
+- **SNGPC/ANVISA** — escrituração de medicamentos controlados junto ao Sistema Nacional de Gerenciamento de Produtos Controlados.
+
+### 🧾 Outras evoluções mockadas na `pharmaguard-ui`
+
+- **Entrada por Nota Fiscal** — leitura de código de barras da DANFE e importação de XML/PDF da nota fiscal para gerar entradas de estoque automaticamente, reduzindo o lançamento manual de itens, NCM e unidade de medida.
+- **Pedido de Compra** — fluxo de criação de pedidos de compra a fornecedores a partir de sugestões de reposição do motor de inteligência.
 
 ---
 
