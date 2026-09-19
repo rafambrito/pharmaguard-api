@@ -391,6 +391,29 @@ Os alertas poderão considerar:
 
 # 🔐 Segurança
 
+## 🐳 Docker e Docker Hub
+
+O Compose publica e executa duas imagens independentes no Docker Hub:
+
+- `rafambrito/pharmaguard-api:latest`
+- `rafambrito/pharmaguard-ui:latest`
+
+A partir deste diretório, faça login, construa as imagens e publique-as:
+
+```bash
+docker login
+docker compose build
+docker compose push
+```
+
+Para subir a aplicação completa localmente, incluindo PostgreSQL:
+
+```bash
+docker compose up -d
+```
+
+A API ficará disponível em `http://localhost:8080` e a interface em `http://localhost:8081`.
+
 A autenticação e autorização são implementadas utilizando **Spring Security** e **JWT**.
 
 O acesso às funcionalidades será controlado de acordo com os perfis definidos pela aplicação.

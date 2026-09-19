@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: pharmaguard-api/app:latest
+    image: rafambrito/pharmaguard-api:latest
     container_name: pharmaguard-api
     restart: always
     depends_on:
@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_BASE_URL: http://localhost:8080
-    image: pharmaguard-ui/app:latest
+    image: rafambrito/pharmaguard-ui:latest
     container_name: pharmaguard-ui
     restart: always
     depends_on:
