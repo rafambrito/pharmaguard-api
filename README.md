@@ -20,6 +20,14 @@ O objetivo é atuar sobre dois problemas críticos da gestão de medicamentos:
 
 Em vez de apenas registrar entradas e saídas, o PharmaGuard busca transformar o histórico do estoque em **informação para tomada de decisão**.
 
+## ✅ Estado atual do MVP
+
+O backend já disponibiliza autenticação JWT, cadastros de medicamentos, categorias, unidades de medida, unidades de saúde, fornecedores e usuários, além do controle de estoque, lotes, entradas, saídas, transferências, pacientes e dispensações.
+
+Também estão implementados o dashboard operacional, as métricas do motor estatístico, os relatórios de consumo, estoque mínimo, vencimentos, produtos críticos e reposição, a consulta de alertas e o diagnóstico assistido por IA com fallback determinístico.
+
+Os endpoints são protegidos por Spring Security, documentados via OpenAPI/Swagger e persistidos em PostgreSQL com migrações Flyway. A interface web correspondente está no repositório [`pharmaguard-ui`](../pharmaguard-ui).
+
 ---
 
 ## 💡 Proposta de valor
@@ -300,7 +308,7 @@ O objetivo é reduzir a probabilidade de perdas por vencimento e garantir que os
 
 # 🚨 Sistema de alertas
 
-O PharmaGuard contará com uma camada de alertas para transformar indicadores em ações.
+O PharmaGuard possui uma camada de alertas que transforma indicadores em ações e pode ser consultada pela API e pela central de notificações da `pharmaguard-ui`.
 
 ```text
                   ANALYTICS
@@ -383,7 +391,7 @@ Os alertas poderão considerar:
 
 # 🔐 Segurança
 
-A autenticação e autorização serão implementadas utilizando **Spring Security** e **JWT**.
+A autenticação e autorização são implementadas utilizando **Spring Security** e **JWT**.
 
 O acesso às funcionalidades será controlado de acordo com os perfis definidos pela aplicação.
 
@@ -439,6 +447,12 @@ A arquitetura prevê separação entre:
 - Quantidade
 - Valor
 
+### 🧑‍⚕️ Pacientes e dispensações
+
+- Cadastro, consulta, edição e exclusão de pacientes
+- Registro e consulta de dispensações por paciente, unidade e medicamento
+- Seleção e baixa de lotes conforme FEFO
+
 ### 📤 Saídas
 
 - Registro de dispensação
@@ -481,7 +495,7 @@ A arquitetura prevê separação entre:
 
 # ⏰ Scheduler
 
-O processamento automático será separado da camada de API.
+O processamento automático é separado da camada de API.
 
 ```text
                     Scheduler
@@ -504,7 +518,7 @@ O processamento automático será separado da camada de API.
                     Alertas
 ```
 
-O Scheduler será responsável por disparar os processos periódicos, enquanto as regras de negócio permanecerão nos módulos de aplicação e domínio.
+O Scheduler é responsável por disparar os processos periódicos, enquanto as regras de negócio permanecem nos módulos de aplicação e domínio.
 
 ---
 
@@ -530,37 +544,35 @@ Prioridades:
 
 # 📚 Documentação da API
 
-> 🚧 **A preencher após a implementação da API.**
+A API expõe documentação OpenAPI através do Springdoc.
 
 ### Swagger / OpenAPI
 
-**Link:** `<!-- inserir URL -->`
+**Swagger UI local:** `http://localhost:8080/swagger-ui/index.html`
 
 ### Documentação
 
-**Link:** `<!-- inserir URL -->`
+**Especificação OpenAPI local:** `http://localhost:8080/v3/api-docs`
 
 ---
 
 # 🔎 Testes
 
-> 🚧 **A preencher após a implementação.**
-
 ## Execução local
 
 ```bash
-# inserir comando
+./mvnw clean test
 ```
 
 ## Testes automatizados
 
 ```bash
-# inserir comando
+./mvnw test
 ```
 
 ## Cobertura
 
-**Relatório:** `<!-- inserir link ou caminho -->`
+**Relatório:** `target/site/jacoco/index.html`
 
 ---
 
@@ -595,7 +607,7 @@ Caso o Ollama não esteja disponível, defina `intelligence.enabled=false` (ou a
 ./mvnw spring-boot:run
 ```
 
-A documentação e os endpoints disponíveis serão adicionados após a implementação da API.
+Com a aplicação em execução, a documentação fica disponível em `/swagger-ui/index.html` e `/v3/api-docs`.
 
 ---
 
@@ -633,7 +645,7 @@ pharmaguard-api/
 
 # 🗺️ Roadmap
 
-O desenvolvimento seguirá uma abordagem incremental, priorizando primeiro a fundação e o **MVP do backend**.
+O MVP do backend está entregue. A evolução atual prioriza integrações externas reais, notificações multicanal e aprimoramentos do motor de inteligência.
 
 ```text
 Fundação
