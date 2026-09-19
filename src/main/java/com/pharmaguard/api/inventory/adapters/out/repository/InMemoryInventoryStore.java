@@ -2,9 +2,11 @@ package com.pharmaguard.api.inventory.adapters.out.repository;
 
 import com.pharmaguard.api.inventory.domain.Categoria;
 import com.pharmaguard.api.inventory.domain.EntradaEstoque;
+import com.pharmaguard.api.inventory.domain.Dispensacao;
 import com.pharmaguard.api.inventory.domain.Lote;
 import com.pharmaguard.api.inventory.domain.Medicamento;
 import com.pharmaguard.api.inventory.domain.MovimentacaoEstoque;
+import com.pharmaguard.api.inventory.domain.Paciente;
 import com.pharmaguard.api.inventory.domain.SaidaEstoque;
 import com.pharmaguard.api.inventory.domain.UnidadeMedida;
 import com.pharmaguard.api.inventory.domain.UnidadeSaude;
@@ -22,6 +24,8 @@ public class InMemoryInventoryStore {
     final Map<Long, Lote> lotes = new ConcurrentHashMap<>();
     final Map<Long, EntradaEstoque> entradasEstoque = new ConcurrentHashMap<>();
     final Map<Long, SaidaEstoque> saidasEstoque = new ConcurrentHashMap<>();
+    final Map<Long, Paciente> pacientes = new ConcurrentHashMap<>();
+    final Map<Long, Dispensacao> dispensacoes = new ConcurrentHashMap<>();
     final Map<Long, MovimentacaoEstoque> movimentacoesEstoque = new ConcurrentHashMap<>();
     final Map<String, Integer> saldosPorLote = new ConcurrentHashMap<>();
 

@@ -144,4 +144,14 @@ class SecurityConfigIntegrationTest {
                 .header("Authorization", GESTOR_AUTH))
             .andExpect(status().isForbidden());
     }
+
+    @Test
+    void shouldProtectPacienteEndpointsAndAllowGestor() throws Exception {
+        mockMvc.perform(get("/api/v1/pacientes"))
+            .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/v1/pacientes")
+                .header("Authorization", GESTOR_AUTH))
+            .andExpect(status().isOk());
+    }
 }

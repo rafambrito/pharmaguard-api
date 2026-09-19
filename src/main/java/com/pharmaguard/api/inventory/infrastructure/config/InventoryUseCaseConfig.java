@@ -1,19 +1,23 @@
 package com.pharmaguard.api.inventory.infrastructure.config;
 
 import com.pharmaguard.api.inventory.adapters.out.repository.CategoriaJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.DispensacaoJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.EntradaEstoqueJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryEntradaEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryCategoriaRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryDispensacaoRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryHistoricoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryInventoryStore;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryLoteRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryMedicamentoRepositoryAdapter;
+import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryPacienteRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaidaEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemorySaldoEstoqueRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeMedidaRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.InMemoryUnidadeSaudeRepositoryAdapter;
 import com.pharmaguard.api.inventory.adapters.out.repository.LoteJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.MedicamentoJpaRepository;
+import com.pharmaguard.api.inventory.adapters.out.repository.PacienteJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.MovimentacaoEstoqueJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.SaidaEstoqueJpaRepository;
 import com.pharmaguard.api.inventory.adapters.out.repository.SaldoLoteEstoqueJpaRepository;
@@ -21,6 +25,8 @@ import com.pharmaguard.api.inventory.adapters.out.repository.UnidadeMedidaJpaRep
 import com.pharmaguard.api.inventory.adapters.out.repository.UnidadeSaudeJpaRepository;
 import com.pharmaguard.api.inventory.application.CategoriaUseCase;
 import com.pharmaguard.api.inventory.application.CategoriaUseCaseImpl;
+import com.pharmaguard.api.inventory.application.DispensacaoUseCase;
+import com.pharmaguard.api.inventory.application.DispensacaoUseCaseImpl;
 import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCase;
 import com.pharmaguard.api.inventory.application.EntradaEstoqueUseCaseImpl;
 import com.pharmaguard.api.inventory.application.HistoricoEstoqueUseCase;
@@ -29,6 +35,8 @@ import com.pharmaguard.api.inventory.application.LoteUseCase;
 import com.pharmaguard.api.inventory.application.LoteUseCaseImpl;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCase;
 import com.pharmaguard.api.inventory.application.MedicamentoUseCaseImpl;
+import com.pharmaguard.api.inventory.application.PacienteUseCase;
+import com.pharmaguard.api.inventory.application.PacienteUseCaseImpl;
 import com.pharmaguard.api.inventory.application.SaidaEstoqueUseCase;
 import com.pharmaguard.api.inventory.application.SaidaEstoqueUseCaseImpl;
 import com.pharmaguard.api.inventory.application.SaldoEstoqueUseCase;
@@ -76,6 +84,21 @@ public class InventoryUseCaseConfig {
     @ConditionalOnMissingBean(MedicamentoJpaRepository.class)
     public MedicamentoUseCase.MedicamentoRepositoryPort inMemoryMedicamentoRepositoryPort(InMemoryInventoryStore store) {
         return new InMemoryMedicamentoRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(PacienteJpaRepository.class)
+    public PacienteUseCase.PacienteRepositoryPort inMemoryPacienteRepositoryPort(InMemoryInventoryStore store) {
+        return new InMemoryPacienteRepositoryAdapter(store);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "app.use-in-memory-inventory", havingValue = "true")
+    @ConditionalOnMissingBean(DispensacaoJpaRepository.class)
+    public DispensacaoUseCase.DispensacaoRepositoryPort inMemoryDispensacaoRepositoryPort(
+            InMemoryInventoryStore store) {
+        return new InMemoryDispensacaoRepositoryAdapter(store);
     }
 
     @Bean
@@ -135,6 +158,17 @@ public class InventoryUseCaseConfig {
     @Bean
     public MedicamentoUseCase medicamentoUseCase(MedicamentoUseCase.MedicamentoRepositoryPort repository) {
         return new MedicamentoUseCaseImpl(repository);
+    }
+
+    @Bean
+    public PacienteUseCase pacienteUseCase(PacienteUseCase.PacienteRepositoryPort repository) {
+        return new PacienteUseCaseImpl(repository);
+    }
+
+    @Bean
+    public DispensacaoUseCase dispensacaoUseCase(DispensacaoUseCase.DispensacaoRepositoryPort repository,
+            PacienteUseCase pacienteUseCase, SaidaEstoqueUseCase saidaEstoqueUseCase) {
+        return new DispensacaoUseCaseImpl(repository, pacienteUseCase, saidaEstoqueUseCase);
     }
 
     @Bean
