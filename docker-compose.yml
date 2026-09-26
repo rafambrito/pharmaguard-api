@@ -11,11 +11,39 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pharmaguard
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d pharmaguard"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: pharmaguard-ollama
+    restart: always
+    environment:
+      OLLAMA_MODEL: llama3.2:1b
+    entrypoint: ["/bin/sh", "/usr/local/bin/ollama-entrypoint.sh"]
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./docker/ollama/entrypoint.sh:/usr/local/bin/ollama-entrypoint.sh:ro
+    networks:
+      - pharmaguard
+    # O DNS herdado do host pode ser IPv6-only, inalcancavel na rede bridge.
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    # Exposta apenas para diagnostico local; a API usa a rede interna.
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list | grep -q llama3.2:1b"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
 
   pharmaguard-api:
     build:
@@ -27,15 +55,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      ollama:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pharmaguard
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       INTELLIGENCE_ENABLED: "true"
-      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_MODEL: llama3.2:1b
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - pharmaguard
     ports:
       - "8080:8080"
 
@@ -50,9 +80,17 @@ services:
     restart: always
     depends_on:
       - pharmaguard-api
+    networks:
+      - pharmaguard
     ports:
       - "8081:80"
 
+networks:
+  pharmaguard:
+    driver: bridge
+
 volumes:
   postgres_data:
+    driver: local
+  ollama_data:
     driver: local
