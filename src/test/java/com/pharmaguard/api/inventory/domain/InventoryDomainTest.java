@@ -48,6 +48,17 @@ class InventoryDomainTest {
                 () -> new Lote(1L, "LOT-001", LocalDate.now().minusDays(1), 10, medicamento));
     }
 
+    @Test
+    void deveReconstituirLoteComDataDeValidadeVencida() {
+        Medicamento medicamento = criarMedicamento(criarCategoria(), criarUnidadeMedida());
+        LocalDate dataValidade = LocalDate.now().minusDays(1);
+
+        Lote lote = Lote.reconstituir(1L, "LOT-001", dataValidade, 10, medicamento);
+
+        assertEquals(dataValidade, lote.getDataValidade());
+        assertEquals(StatusValidade.VENCIDO, lote.getStatusValidade());
+    }
+
     private Categoria criarCategoria() {
         Categoria categoria = new Categoria();
         categoria.setNome("Antibioticos");

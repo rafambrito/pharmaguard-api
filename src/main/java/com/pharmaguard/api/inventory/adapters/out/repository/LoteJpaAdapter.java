@@ -68,13 +68,8 @@ public class LoteJpaAdapter implements LoteRepositoryPort {
 
     private Lote toDomain(LoteEntity e) {
         Medicamento medicamento = medicamentoToDomain(e.getMedicamento());
-        Lote lote = new Lote();
-        lote.setId(e.getId());
-        lote.setNumeroLote(e.getNumeroLote());
-        lote.setDataValidade(e.getDataValidade());
-        lote.setQuantidadeInicial(e.getQuantidadeInicial());
-        lote.setMedicamento(medicamento);
-        return lote;
+        return Lote.reconstituir(
+                e.getId(), e.getNumeroLote(), e.getDataValidade(), e.getQuantidadeInicial(), medicamento);
     }
 
     private Medicamento medicamentoToDomain(MedicamentoEntity e) {

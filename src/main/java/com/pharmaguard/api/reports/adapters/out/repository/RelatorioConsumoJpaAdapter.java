@@ -66,13 +66,12 @@ public class RelatorioConsumoJpaAdapter implements RelatorioConsumoUseCase.Relat
     }
 
     private Lote loteToDomain(LoteEntity entity) {
-        Lote lote = new Lote();
-        lote.setId(entity.getId());
-        lote.setNumeroLote(entity.getNumeroLote());
-        lote.setDataValidade(entity.getDataValidade());
-        lote.setQuantidadeInicial(entity.getQuantidadeInicial());
-        lote.setMedicamento(medicamentoToDomain(entity.getMedicamento()));
-        return lote;
+        return Lote.reconstituir(
+                entity.getId(),
+                entity.getNumeroLote(),
+                entity.getDataValidade(),
+                entity.getQuantidadeInicial(),
+                medicamentoToDomain(entity.getMedicamento()));
     }
 
     private Medicamento medicamentoToDomain(MedicamentoEntity e) {

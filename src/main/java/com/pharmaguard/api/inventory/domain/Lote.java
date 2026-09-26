@@ -22,6 +22,17 @@ public class Lote {
         setMedicamento(medicamento);
     }
 
+    public static Lote reconstituir(
+            Long id, String numeroLote, LocalDate dataValidade, int quantidadeInicial, Medicamento medicamento) {
+        Lote lote = new Lote();
+        lote.id = id;
+        lote.setNumeroLote(numeroLote);
+        lote.dataValidade = Objects.requireNonNull(dataValidade, "dataValidade e obrigatoria");
+        lote.setQuantidadeInicial(quantidadeInicial);
+        lote.setMedicamento(medicamento);
+        return lote;
+    }
+
     public Long getId() {
         return id;
     }

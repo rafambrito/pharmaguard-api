@@ -229,13 +229,12 @@ public class SaidaEstoqueJpaAdapter implements SaidaEstoqueRepositoryPort {
     }
 
     private com.pharmaguard.api.inventory.domain.Lote loteToDomain(LoteEntity entity) {
-        com.pharmaguard.api.inventory.domain.Lote lote = new com.pharmaguard.api.inventory.domain.Lote();
-        lote.setId(entity.getId());
-        lote.setNumeroLote(entity.getNumeroLote());
-        lote.setDataValidade(entity.getDataValidade());
-        lote.setQuantidadeInicial(entity.getQuantidadeInicial());
-        lote.setMedicamento(medicamentoToDomain(entity.getMedicamento()));
-        return lote;
+        return com.pharmaguard.api.inventory.domain.Lote.reconstituir(
+                entity.getId(),
+                entity.getNumeroLote(),
+                entity.getDataValidade(),
+                entity.getQuantidadeInicial(),
+                medicamentoToDomain(entity.getMedicamento()));
     }
 
     private Medicamento medicamentoToDomain(MedicamentoEntity e) {
